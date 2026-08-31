@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+      <h1>Full Adders</h1>
+
+      <hr>
+
+      <p>Ok, here's the $64 question- suppose we wanted to add binary numbers that had more than just one digit. What would we do then?</p>
+
+      <p>The key is in generalizing. We already have a circuit that can add two one-digit binary numbers, so why don't we try and scale that up to add two <em>n</em>-digit binary numbers?</p>
+
+      <p>That's where the Full Adder comes in.</p>
+
+      <h3>Scaling</h3>
+
+      <p>So, how will we accomplish this 'scaling'? I think the best way to think about this is the same way that that we did the half adder example- with good old visual addition.</p>
+
+      <p>Now, we've moved past single-digit addition. Suppose we wanted to add two multi-digit binary numbers by hand. Let's take a look at an example below where we'll try to add <span class="code">11101</span> and <span class="code">11011</span>.</p>
+
+      <img src="img/u3c2-1.png" alt="" class="inlinepic">
+
+      <p>Think back to elementary school- what's your natural process when you add these? <em>You go column by column.</em></p>
+
+      <p>Consider doing this with our previously created circuit. The first column would be easy, we would add <span class="code">1</span> and <span class="code">1</span>, yielding <span class="code">0</span> as a sum and <span class="code">1</span> as a carry. Excellent.</p>
+
+      <p>However, we now have a bit of a problem. We want to add what's in the second column, but we have the 'carry' of the previous operation to deal with.</p>
+
+      <img src="img/u3c2-2.png" alt="" class="inlinepic">
+
+      <p>We can account for this! The key here is that we will always have <strong>at most</strong> one more 'carry' bit coming in.</p>
+
+      <p>If we're going to make an adder that we can use over and over for as many digits as we want, we're going to need it to do the following:</p>
+
+      <ul>
+          <li><p>Add two one-digit binary numbers and produce a sum and carry</p></li>
+          <li><p>In case the previous addition resulted in a carry, be able to add in that third number as well</p></li>
+      </ul>
+
+      <p>This one is a little less straightforward, but with a little bit of effort, we can produce a circuit that does exactly that. Here it is, below. The truth table for this will be left as an exercise to the reader. </p>
+
+      <img src="img/u3c2-3.png" alt="" class="inlinepic-big">
+
+      <p>Knowing this, we can effectively 'chain' the addition operations. After we use a half adder for the first column, we take the carry bit from that and use it in a full adder to add the second column. From then on, we can use full adders for the subsequent columns, effective adding an <em>n</em>-digit binary number.</p>
+
+      <p>Below is a diagram showing four adders chained. Note that we can also use a Full adder for the first column, but that would be inefficient, as we know the 'carry in' would always be zero.</p>
+
+      <img src="img/u3c2-5.png" alt="" class="inlinepic-big">
+
+      <p>Here's another way to think about it. The reason we use a half adder for the first column and a full adder for the rest of the columns is because <em>for every column other than the first column, we may have to deal with a carry-over</em>.</p>
+
+
+      <h3>Alternate Construction</h3>
+
+      <p>We can also construct a full adder using half adders. This makes addition even easier in some cases, like above, when we chain them. This allows us to use only half-adders to build the entire set of adders.</p>
+
+      <img src="img/u3c2-4.png" alt="" class="inlinepic-big">
+
+      <h3>Full Adders in Minecraft</h3>
+
+      <p>In Minecraft, it's easy to get carried away and build out the gates that we learned in order to produce a very large full adder, but many clever people have worked hard to squish the design for a full adder down as much as possible, leveraging redstone nuances in order to make a truly efficient full adder.</p>
+
+      <p>In that sense, the <strong>most efficient</strong> Minecraft way to build a full adder is a little tougher to understand right off the bat, but it does indeed work.</p>
+
+      <p>You can always leverage the logic gates we created earlier along with the schematics above to manually build a fairly large full adder, but again, that will take up far more space than the condensed, optimized full adder that we are suggesting you use in your designs.</p>
+
+      <p>There are a multitude of ways to build a Full Adder in Minecraft, but I must emphasize that you <strong>should not</strong> manually build out all the logic gates yourself, or even conglomerate half-adders for this purpose.</p>
+
+      <p>Minecraft players have spent years taking advantage of the nuances of Minecraft and building full adders as compactly as possible, and the result is a variety of very efficient ways to build functional Full adders.</p>
+
+      <p>At the time of writing, both instructors of this course (Ashwath Krishnan and I) have two different preferred ways of building a Full Adder. Feel free to refer to lecture for Ashwath's method. (Link to the webcast is live on the course website).</p>
+
+      <p>For my preferred method, check the following list of tutorials on Gamepedia.There are a few neat ways to build adders on there, among other designs. <a target="_blank" href="https://minecraft.gamepedia.com/Tutorials/Logic_gates">Gamepedia Adders</a></p>
+
+      <div class="container">
+        <iframe src="https://circuitverse.org/simulator/embed/full-adder-from-2-half-adders-a8897b88-4619-4fdb-9b20-eae179867673?theme=&display_title=false&clock_time=true&fullscreen=true&zoom_in_out=true" style="border-width:; border-style: ; border-color:;" name="myiframe" id="projectPreview" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="500" width="500" allowFullScreen></iframe>
+      </div>
+
+
+      <div class="pagearrows">
+        <a href="u3c1.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u3c3.html" class="text-primary"><div class="forward">forward <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+
+    </div>
+
+</body>

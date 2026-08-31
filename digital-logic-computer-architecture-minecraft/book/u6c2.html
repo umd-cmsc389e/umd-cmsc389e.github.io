@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+    <h1>Read/Write Memory</h1>
+    <p>Now that we know d-latches and d flip-flops, let's visualize what storing <strong>two bits</strong> of memory would look like with all the prior combinational circuits that we've built.</p>
+
+    <img src="img/u6c2-2.png" alt="one register" class="inlinepic-big">
+
+    <p>We have our decoders (which we've seen before) that allows us to pick the register we want to <strong>write</strong> to. Although the data (blue input bus) is fed to both registers, we only write to the register based on the decoder. After we build the registers, we create a multiplexer-decoder circuit to <strong>read</strong> a specific register. This is synonymous to the opcodes we used to select operations on the ALU. Lastly, the clock is a pulse that will allow us to trigger the <strong>enable</strong> signals in each bit (release the repeater lock)</p>
+
+    <h3>In Minecraft</h3>
+    <p>This d flip-flop design can stack upwards to represent 8 bits and can be used in conjunction with muxes to select the right register in memory to read/write to at each layer. When we want to write to some register, we release the repeater lock (a signal from our decoder), and allow signal to propagate.</p>
+
+    <p>Great, we can write to a register, but what about reading from that register?  We can use a comparator on the output of the d-latch (which will indicate whether or not some register has some value at a location). We have another "read" line, that is also held by a signal from our decoder.</p>
+        
+    <img src="img/u6c2-1.jpg" alt="one register" class="inlinepic-big">
+
+    <p>At a very basic level, writing to a register is just a series of d-latches and reading from a register is a series of comparators. Here is what one layer looks like from above. Note that the top right redstone lamp is data to write (hence the lever), the bottom right redstone lamp is the data read at a layer. The glass towers are signals from the decoder telling us which register to read from and write to.</p> 
+
+    
+      <div class="pagearrows">
+        <a href="u6c1.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u6c3.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+
+    </div>
+
+</body>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+        <h1>Immediate vs. Non-Immediate Operations</h1>
+        <p>
+            Recall in the <a href="u5c1.html"><strong>mux</strong></a> module we said some operations have different formats. A <strong>LDI</strong> operation looks 
+            different from an <strong>ADD</strong> operation.
+        </p>
+        <pre>
+    LDI r3 0
+    ADD r1 r2 r3</pre>
+        <p>
+            Now that you have a control ROM, you should be able to wire both immediate and non-immediate operations. 
+            Remember, in our CPU, normal operations would have the third set of four bits as the first input and the 
+            last set of four bits as the second input. In an immediate operation, the last <strong>EIGHT</strong> bits would instead be used. 
+            Let's say the opcode for LDI is <span class="code"><strong>1100</strong></span> and the opcode for ADD is <span class="code"><strong>1101</strong></span>.
+        </p>
+        <pre>    
+    LDI r3 0
+    1100 0011 00000000
+
+    ADD r1 r2 r3
+    1101 0001 0010 0011
+        </pre>
+        <p>
+            In order to resolve this, we need a <strong>mux</strong> to distinguish the third and fourth set of four bits 
+            between the two types of operations. In an immediate operation like load immediate (LDI), we want to copy the address of 
+            the write register to the first input register. We then want the last eight bits (in the above example that would 
+            be <strong>00000000</strong>) to be the data to write to some register. That means, when we see LDI, 
+            we want some signal to indicate to us, "Hey, we want to toggle this mux to select different bits." 
+            Thus, we need two new muxes at the proposed locations that will select the appropriate bits based on the opcode 
+            provided to the control ROM.
+        </p>
+        <img src="img/u7c2-1.png" alt="long decoder" class="inlinepic-big">
+
+        <p>In the above, the diagram actually flipped the indexing of the bits, but the idea remains the same. You can notice
+            that the write register and the data to write can both be overridden. Now that you understand how LDI works, you can guess
+            how other immediate operations on the diagram would use muxes to override certain bits in specific locations.
+        </p>
+
+        <p>
+            If you need a refresher on how muxes work, please check this section. You should now be able to flip through 
+            different types of operations in your instruction memory and see your register file updating register memory 
+            accordingly. The diagram is accredited to <a href="https://www.youtube.com/@mattbatwings">matbatwings</a>
+        </p>
+      <div class="pagearrows">
+        <a href="u7c2.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u8.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>

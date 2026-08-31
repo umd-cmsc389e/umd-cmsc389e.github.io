@@ -1,0 +1,280 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&family=Roboto:ital,wght@0,300;0,400;0,700;1,400&family=Work+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;700&display=swap');
+
+
+* {
+    font-family: 'Roboto';
+}
+
+body {
+    padding-right:12px;
+    padding:15%;
+    padding-top:2%;
+}
+
+p {
+    font-family: 'Noto Sans JP';
+    color: #5c5c5c;
+}
+
+h1 {
+    font-weight: bold;
+    color: #5c5c5c;
+}
+h2 {
+    color: #5c5c5c;
+}
+h3 {
+    margin-top:24px;
+    font-weight: 600;
+    color: #5c5c5c;
+}
+li {
+    color: #5c5c5c;
+}
+
+.code {
+    font-family:monospace;
+    color:#0275d8;
+    background: rgb(233, 232, 232);
+    border:3px solid rgb(233, 232, 232);
+    border-radius: 6px;
+}
+
+.mono {
+    font-family: monospace;
+}
+
+
+
+/* page arrows */
+
+div.pagearrows {
+    margin-top:32px;
+    width:100%;
+    padding:0px;
+    margin-left:0px;
+    margin-right:0px;
+}
+
+div.back {
+    width:48%;
+    float:left;
+    margin-left:0.5%;
+    margin-right:1.5%;
+    border: 1px solid  #0275d8 ;
+    border-radius: 12px;
+    padding:24px;
+    transition: background-color 0.5s ease;
+}
+
+div.forward {
+    width:48%;
+    float:left;
+    text-align:right;
+    margin-left:1.5%;
+    margin-right:0.5%;
+    border: 1px solid  #0275d8 ;
+    border-radius: 12px;
+    padding:24px;
+    transition: background-color 0.5s ease;
+}
+
+div.forward:hover, div.back:hover{
+    background-color: #0274d810;
+}
+
+div.forward:active, div.back:active {
+    background-color: #0274d8;
+    color:white;
+}
+
+
+/* end pagearrows */
+
+
+/* iframes */
+
+iframe.page {
+    width:100%;
+    height:100%;
+    margin-top:16px;
+}
+
+iframe.mc-schematic {
+    width:100%;
+    margin-bottom:0px;
+}
+
+div.pgview {
+    height: 88vh;
+}
+
+nav.topbar{
+    height:8vh;
+}
+
+ol.toc {
+    margin-top: 16px;
+    margin-right:4px;
+}
+
+h1 {
+    margin-bottom: 16px;
+}
+
+ol {
+    counter-reset: item;
+}
+
+ol > li {
+    counter-increment: item;
+}
+
+ol ol > li {
+    display: block;
+}
+
+ol ol > li:before {
+    content: counters(item, ".") ". ";
+    margin-left: -20px;
+}
+
+img.inlinepic {
+    margin-top:32px;
+    margin-bottom:32px;
+    width:40%;
+    margin-left:30%
+}
+
+img.inlinepic-med {
+    margin-top: 26x;
+    margin-bottom: 26px;
+    width: 62.5%;
+    margin-left: 15%;
+}
+
+img.inlinepic-big {
+    margin-top:16px;
+    margin-bottom:32px;
+    width:95%;
+    margin-left:2.5%;
+}
+
+.here {
+    font-weight: bold;
+}
+
+div.disclaimer {
+    background-color: #f9f9f9;
+    border-left: 4px solid #ff9800;
+    padding: 10px;
+    margin: 20px 0;
+}
+
+div.schematic {
+    border: 2px solid grey;
+    border-radius: 5px;
+}
+
+div.schematic-desc {
+    background-color: rgb(240, 238, 238);
+    font-size:11px;
+    padding:6px;
+    margin-top:-6px;
+    color: grey;
+    overflow:auto;
+}
+
+button.rel {
+    background-color:rgb(240, 238, 238);
+    color:grey;
+    border:0px;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    background: #ffffff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+th, td {
+    text-align: center;
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+th {
+    background-color: #4CAF50;
+    color: white;
+}
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+pre {
+    background-color: #eee;
+    padding: 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+}
+
+/* container adjustment */
+@media (min-width: 320px) {
+    .mc-schematic {
+        height: 240px;
+    }
+}
+
+@media (min-width: 420px) {
+    .mc-schematic {
+        height: 360px;
+    }
+}
+
+@media (min-width: 768px) {
+    .container-large {
+        width: 300px;
+    }
+    .container-large {
+        width: 970px;
+    } 
+
+    .mc-schematic {
+        height: 480px;
+    }
+} 
+@media (min-width: 992px) {
+    .container-large {
+        width: 660px;
+    }
+    .container-large {
+        width: 1170px;
+    }
+    .mc-schematic {
+        height: 540px;
+    }
+}
+@media (min-width: 1200px) {
+    .container-large {
+        width: 840px;
+    }
+    .container-large {
+        width: 1500px;
+    } 
+    .mc-schematic {
+        height: 640px;
+    }
+}
+
+.container-large, .container-large {
+    max-width: 100%;
+}
+
+iframe {
+    display: block; /* Makes iframe a block element */
+    margin: 0 auto; /* Horizontally centers iframe */
+    border: 1px solid #ccc; /* Optional border */
+}

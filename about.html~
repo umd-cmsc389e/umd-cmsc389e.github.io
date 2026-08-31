@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>CMSC389E</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+
+    <meta property='og:title' content='CMSC389E' />
+    <meta property='og:image' content='header.png' />
+    <meta property='og:description' content='Course website for CMSC389E at UMD' />
+    <meta property='og:url' content='http://www.cs.umd.edu/class/spring2020/cmsc389E/' />
+
+</head>
+
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-mc static-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">CMSC 389E</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span style="font-family:Roboto">+</span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="index.html">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Syllabus</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="downloads.html">Downloads</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <img src="header.png" class="header" alt="">
+
+                <h1 class="hero mt-5">CMSC 389E: <br> Digital Logic Design Through Minecraft</h1>
+                <hr>
+                <ul class="list-unstyled">
+                    <li>Spring 2020</li>
+                    <li>Instructors: Akilesh Praveen, Ashwath Krishnan</li>
+                    <li>F 2:00-2:50 in ESJ B0320</li>
+                </ul>
+
+                <hr>
+
+                <p>CMSC389E, Digital Logic Design through Minecraft is a Computer Science course at the University of
+                    Maryland which strives to teach students the principles and theory of digital logic. Students will
+                    leverage the popular sandbox game, Minecraft, as a learning tool as they build the basic components
+                    of a 2-bit computer, including an ALU, RAM, ROM, Clock, etc. Course curriculum is adapted from
+                    Alexander Brassel's 2019 offering of the course, and heavily borrows from CMSC250 (Discrete
+                    Structures) and ENME244 (Digital Logic) at UMD.</p>
+
+                <p>This class is currently taught by Akilesh Praveen and Ashwath Krishnan. We are both second-year
+                    computer science students at the University of Maryland</p>
+
+                <p>The Minecraft modification that allows Minecraft to interface with the UMD submit server and adds
+                    several QOL improvements is created by Jamie Brassel.</p>
+
+
+                <hr>
+                <footer>This website is compliant with UMD accessibility standards. Please contact apraveen@cs.umd.edu
+                    if you
+                    are in need of special accomodations.</footer>
+
+
+
+            </div>
+
+            <!-- Bootstrap core JavaScript -->
+            <script src="vendor/jquery/jquery.slim.min.js"></script>
+            <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

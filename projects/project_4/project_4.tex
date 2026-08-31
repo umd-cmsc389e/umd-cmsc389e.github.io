@@ -1,0 +1,223 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[labels]{enumitem}
+\usepackage{tikz}
+\usepackage{alltt}
+\usepackage{tcolorbox}
+\usepackage{indentfirst}
+\usepackage[top = 1in, left = 1 in, right = 1 in, bottom = 1in]{geometry}
+\usepackage{sectsty}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{circuitikz}
+\usepackage{float}
+\usepackage{circuitikz}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\setlist{  
+  listparindent=\parindent,
+  parsep=1em
+}
+\hypersetup{
+    colorline4,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\sectionfont{\fontsize{17}{15}\selectfont}
+\setlength{\parskip}{1em}
+
+\setlength{\parindent}{1cm}
+
+\newcommand{\createtitle}[4]{
+    {\Huge #1} \hfill  #2 \\
+    
+    \begin{tabular}{rl}
+        \textbf{Assigned: } & #3 \\
+        \textbf{Due: } & #4
+    \end{tabular}
+    \vspace{.75 in}}
+
+\newcommand{\mysubsection}[1]{
+    {\fontsize{13}{15}\selectfont\bf \item #1}}
+    
+\newenvironment{subenv}[2]
+{\section{#1}\vspace{.5em}#2\\\begin{enumerate}}
+{\end{enumerate}}
+
+\newcommand{\varin}[1]{\textcolor{red}{\texttt{#1}}}
+\newcommand{\varout}[1]{\textcolor{blue}{\texttt{#1}}}
+
+\newcommand{\myinput}{\varin{input }}
+\newcommand{\myoutput}{\varout{output }}
+
+\newcommand{\image}[2]{
+\begin{figure}[H]\begin{center}
+    \includegraphics[width=#2\linewidth]{#1}
+\end{center}\end{figure}}
+
+\newcommand{\tbd}{\textbf{TBD}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Akilesh Praveen}
+\fancyhead[RE,LO]{CMSC389E}
+
+\begin{document}
+
+\large
+
+{\fontfamily{lmdh}\selectfont{\Huge CMSC389E Project 4: \par Clock \& Program Counter}}
+
+Assigned \textbf{Monday November 1}
+
+Due \textbf{Monday November 8}
+
+\section{\fontfamily{lmdh}\selectfont{Project At a Glance}}
+
+Here's the deal- we've got some components left to create, but they're frankly just one big new circuit, mishmashed in with a bunch of concepts that you've already heard of.
+We've got decoders and adders galore, mixed with a healthy amount of logic gates in order to create something truly beautiful- a fully functionaly computer.
+Building all of that out, however, is very tedious.
+As such, we'll be assigning you a portion of the final project that will give you all the tools you need to (painstakingly) build out the entire computer by yourself, but will save you the pain for the sake of your packed student schedule.
+
+TL;DR we've created this last project so that you may take some time to conceptually understand what's needed to make our computer tick, but the actual effort you'll put in will be a lot less than what's needed to actually build the entire computer.
+
+\section{\fontfamily{lmdh}\selectfont{Drake, where's the ROM?}}
+
+In an effort to make the end of the semester a little easier for you all, we decided to create the ROM portion of this project for you. 
+As you may recall from our previous lectures, we're going big-picture now and focusing on the larger components of our computer as a whole.
+That is, now that we've built the ALU, we need to think about ROM, RAM, Clock and PC. 
+We've taken the liberty of building out the ROM for you in the starter world for this project, but in case you'd like to toy with it a little more, we've included an extra credit opportunity for it as well.
+More on that later- for now, let's just say that we've taken care of the ROM portion for you.
+You'll see it as soon as you load into the Project 4 starter world.
+
+So, now that our ROM is done, let's recap. We've finished out the ROM, and we've also finished out the ALU.
+
+This ROM is excellent- it does all that we need to do, as per the last few lectures in class.
+That is, it represents 389E Assembly using a decoder system in the following way:
+
+\begin{itemize}
+  \item The circuit receives a binary input dictating which 'line' of code to output.
+  \item The circuit uses a decoder to activate the appropriate 'line' of code.
+  \item The 'line' of code, which is just series of 14 blocks with/without torches is activated, projecting its output onto the output bus.
+  \item The 'line' of code travels down the output bus and is ultimately interpreted by other circuitry.
+\end{itemize}
+
+The ALU, you already know about- so we won't talk about it here.
+Let's move on now to the stuff that's left to build- i.e. what remains for us to construct?
+
+\section{\fontfamily{lmdh}\selectfont{So, What's Left To Build?}}
+
+The answer is pretty simple. 
+Let's take a look at this diagram to see where our extensions to our ever-growing machine fit into our master plan to make a computer.
+Take a look at the diagram we've got below.
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Shape: Rectangle [id:dp5921038974610358] 
+\draw  [fill={rgb, 255:red, 126; green, 211; blue, 33 }  ,fill opacity=1 ] (308.4,56.6) -- (461.4,56.6) -- (461.4,172) -- (308.4,172) -- cycle ;
+%Shape: Rectangle [id:dp7682132847374952] 
+\draw  [fill={rgb, 255:red, 245; green, 166; blue, 35 }  ,fill opacity=1 ] (99.57,38.8) -- (169.57,38.8) -- (169.57,87.6) -- (99.57,87.6) -- cycle ;
+%Straight Lines [id:da4338022631406676] 
+\draw    (170.6,63.6) -- (299.02,83.3) ;
+\draw [shift={(301,83.6)}, rotate = 188.72] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6665272072032727] 
+\draw    (307.4,160.8) -- (146.43,232.39) ;
+\draw [shift={(144.6,233.2)}, rotate = 336.02] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Shape: Rectangle [id:dp27632518285076746] 
+\draw  [fill={rgb, 255:red, 126; green, 211; blue, 33 }  ,fill opacity=1 ] (19,203.2) -- (143.8,203.2) -- (143.8,276.4) -- (19,276.4) -- cycle ;
+%Straight Lines [id:da9669220764176485] 
+\draw    (62.6,202) -- (62.6,158) ;
+\draw [shift={(62.6,156)}, rotate = 90] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da14482572171663322] 
+\draw    (80.2,158.4) -- (80.2,200.8) ;
+\draw [shift={(80.2,202.8)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Shape: Rectangle [id:dp8111716839726016] 
+\draw  [fill={rgb, 255:red, 208; green, 2; blue, 27 }  ,fill opacity=0.37 ] (34.8,114.4) -- (119.8,114.4) -- (119.8,154.4) -- (34.8,154.4) -- cycle ;
+
+% Text Node
+\draw (108.4,42.6) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\fontfamily{pcr}\selectfont \textcolor[rgb]{1,1,1}{{\scriptsize program}}}\\{\fontfamily{pcr}\selectfont \textcolor[rgb]{1,1,1}{{\scriptsize counter}}}};
+% Text Node
+\draw (376.8,106.4) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\fontfamily{pcr}\selectfont ROM}};
+% Text Node
+\draw (186.9,45.85) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 144; green, 19; blue, 254 }  ,opacity=1 ,rotate=-9] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize number of line}}};
+% Text Node
+\draw (179.43,193.75) node [anchor=north west][inner sep=0.75pt]  [rotate=-335.85] [align=left] {{\fontfamily{pcr}\selectfont \textcolor[rgb]{0.56,0.07,1}{{\footnotesize actual code}}}\\};
+% Text Node
+\draw (30,213.4) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize ALU}}\\{\fontfamily{pcr}\selectfont {\footnotesize (+ some extra)}}};
+% Text Node
+\draw (40,125.4) node [anchor=north west][inner sep=0.75pt]  [font=\footnotesize] [align=left] {{\fontfamily{pcr}\selectfont registers}};
+% Text Node
+\draw (88.4,169.8) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\fontfamily{pcr}\selectfont \textcolor[rgb]{0.56,0.07,1}{vars}}};
+% Text Node
+\draw (299.6,208.2) node [anchor=north west][inner sep=0.75pt]   [align=left] {\textcolor[rgb]{0.49,0.83,0.13}{green} - made already\\\textcolor[rgb]{0.96,0.65,0.14}{orange} - in progress\\\textcolor[rgb]{0.97,0.58,0.63}{red} - haven't made};
+
+\end{tikzpicture}
+
+You'll pretty much just be building the program counter and clock, which will incrementally tell the ROM which line that it should send to the ALU. 
+We haven't wired it up like that yet for the purpose of the project's simplicity, but let's suppose this has been done.
+
+In simple terms, you will need to do a few things. 
+First, create a full adder.
+This will be the basis of our creation.
+We will need a bit more than that- this adder needs to retain the state that it's in, and it needs to be able to increment by one.
+We can address the incrementing by one by simply wiring up the adder to add one every time that it's pulsed.
+We can address the retaining state portion by integrating the flip-flop design that we learned in class.
+
+This project elegantly combines a 3 bit memory register (representing a program counter register), and a modified full adder, and a reliable three-bit output.
+It also integrates the clock that we addressed briefly in the last two classes. 
+
+\section{\fontfamily{lmdh}\selectfont{Crafting is Believing}}
+
+You have access to a video that goes step by step, building out this project block by block.
+We encourage you to watch it if you are lost- copying block by block is completely valid here. 
+However, please ensure that you build this yourself, and recall our academic dishonesty policy. 
+
+\href{https://drive.google.com/file/d/1y5DlbOz2xEPjKfQTWWV6dcyvQly7oEPP/view}{Incrementing Full adder with Clock}
+
+Make sure that your design replicates the functionality demonstrated in the video, and you should be good to go.
+As this project can be done by pretty much following the video, we did not go in-depth with the circuit diagram here.
+However, if you're interested in information regarding the memory construct or the clock, please feel free to email us.
+
+You will also be needing the \textbf{Project 4 starter world}, which you may find on the course website as a link.
+
+\section{\fontfamily{lmdh}\selectfont{25 $\%$ Extra Credit!}}
+
+A special task for those of you with a discerning eye- as you may imagine, our Program Counter needs not only to increment by one, it also needs to do two more things.
+I recommend that you implement these capabilities one after the other, each of them are worth 12.5$\%$
+
+You will essentially be building out the \textbf{JUMP} functionality. That is, instead of incrementing by one every cycle, you'll be allowing the circuit to decrement if a control wire is on, and you'll be allowing the circuit to add/subtract by any quantity from 1 to 9 (you may disregard overflow). 
+
+\begin{itemize}
+  \item Subtract by one as well - implement the subtractor logic that you did in the previous project for this adder. 
+  \item Add/Subtract by any quantity (up to three bits). You will simply have to change what input is being fed into the adder here instead of 1. You may get creative with this solution, but the best way to go is to allow what input number to provide using levers.
+\end{itemize}
+
+\section{\fontfamily{lmdh}\selectfont{Testing \& Submission}}
+
+Submission is a little different this time!
+There will be no test, as we discussed.
+Instead, you must send us a world that contains a self incrementing adder, as demonstrated in the video that we have provided you.
+It should be built reasonably close to spawn, and should function as expected.
+If it does not, please include some notes in your ELMS submission about what works and what doesn't.
+Failure to submit a working project AND then having a lack of explanation on ELMS will net you an automatic zero on this project.
+
+After this, you can submit the project as you usually would- remember to attach the:
+
+\begin{itemize}
+  \item \texttt{.zip} file containing your world
+  \item Optional- a screen recoridng of your PC incrementing properly
+\end{itemize}
+
+Congrats- you've put together a fantastic model program counter and clock!
+
+\end{document}

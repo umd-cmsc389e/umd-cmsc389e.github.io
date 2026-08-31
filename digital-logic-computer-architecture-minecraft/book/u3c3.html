@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    
+    <title>Digital Logic Design &amp; Minecraft</title>
+    
+    <!-- Bootstrap core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    
+    </head>
+
+    <style>
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+<body>
+    <div class="container container-large">
+        <h1>Carry Cancel Adders</h1>
+        <p>
+            There are plenty of ways to optimize an adder. As you may have noticed, it is quite tedious 
+            to sequentially use full adders in Minecraft. There are compact builds of course, but is there 
+            any other way to efficiently add two binary inputs?
+        </p>
+        <p>
+            It turns out there are many, but one of them we are going to discuss is called the 
+            <strong>carry cancel adder</strong>. Observe that when we added two binary numbers, we used two 
+            half adders. This is synonymous to the output sum bit being equivalent to using XOR on input1, 
+            input2, and carry. Try it yourself:
+        </p>
+        <pre>
+                     1  &lt;- input carry
+                     0
+                     1
+                     -
+    output carry &lt;- 10  
+        </pre>
+        <p>
+            This means all we need to worry about is finding those carries at each step, right? If you notice, 
+            when the two inputs are BOTH one (e.g., <span class="code">1</span> + <span class="code">1</span> = <span class="code">2</span> or <span class="code">10</span> in binary), a carry gets propagated. That 
+            carry "signal" is propagated as long as higher inputs also contain ones. For example:
+        </p>
+        <pre>
+     111111111
+     1010101011
+     0101010101
+    -----------
+    10000000000
+        </pre>
+        <p>
+            Thus, when we see two ones, we produce a carry signal. We stop carrying (if you guessed it) when 
+            we see two inputs that are BOTH <span class="code">0</span>. Note that the signals are shifted one to the left (just like 
+            carries are shifted one to the left):
+        </p>
+        <pre>
+    00111
+    010011
+    100101
+    ----------
+    111000
+        </pre>
+        <p>
+            Carry cancel adders are <strong>synchronized adders</strong> because they receive all their carries at the same 
+            time and produce outputs accordingly. The full adder from the previous module (also known as a 
+            ripple carry adder) must propagate carries to other inputs first before an nth-place in a number 
+            can be calculated. This is significantly faster for 8-bit addition. We will use the CCA in compact 
+            builds moving forwards. <em>Given all of this</em>, take some time to understand the following logic diagram.
+        </p>
+
+        <img src="img/u3c3-4.png" alt="carry-cancel-diagram" class="inlinepic-med">
+
+        <p></p>
+        <p>The below is a representation of the carry-cancel propagation. We utilize a glass tower to transmit a signal upwards, and the comparator can choose to cancel the signal at some point moving upward. The signal going through the back of the comparator is a carry signal at the nth digit, and the signal going through each side of the comparator is a cancel signal at the nth digit. Once you determine how to produce these signals given two inputs at some digit i, you can create a full CCA. Note, we will probably give you the schema for the CCA, but you should understand how this works. </p>
+
+        <div class="schematic">
+            <iframe name="not-gate" src="https://cubical.xyz/project/5XNwM" frameborder="0" class="mc-schematic"></iframe>
+            <div class="schematic-desc">
+                click to focus, press esc to exit. powered by cubical  <span style="float:right;"> click 'refresh' if the screen is black. <button class="rel" onclick="var ifr=document.getElementsByName('not-gate')[0]; ifr.src=ifr.src;">[refresh]</button></span>
+            </div>
+        </div>
+        
+      </div>
+
+        <div class="pagearrows">
+        <a href="u3c2.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u3c4.html" class="text-primary"><div class="forward">forward <i class="fas fa-chevron-right"></i></div></a>
+        </div>
+        </div>
+    </body>
+</html>

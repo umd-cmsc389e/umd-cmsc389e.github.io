@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+      <h1> <span class="code">NAND</span> and <span class="code">AND</span></h1>
+      <hr>
+
+      <p><span class="code">NAND</span> and <span class="code">AND</span> are two logic gates that go hand in hand. It's very easy to understand <span class="code">NAND</span> once you understand <span class="code">AND</span>, so we'll start with the latter.</p>
+
+      <h3>The <span class="code">AND</span> Gate- Exactly What You'd Think</h3>
+
+      <p>The first real gate- that is, a gate with two inputs- that we'll be learning about is the <span class="code">AND</span> gate.</p>
+
+      <p>The easiest way to understand this gate is to think of what it implies in English. If a gate has two boolean inputs, labelled <span class="mono">1</span> and <span class="mono">2</span>, then in order for the gate to produce <span class="mono">TRUE</span> as an output, both <span class="mono">1</span> <span class="code">AND</span> <span class="mono">2</span> have to be <span class="mono">TRUE</span></p>
+
+      <p>Below is the diagram and truth table for an <span class="code">AND</span> gate.</p>
+
+      <img src="img/u2c2-1.png" alt="preset" class="inlinepic-big">
+
+      <p>Note that unless the first input <strong>and</strong> the second input are on, the gate will not produce a positive output.</p>
+
+      <p>Here's what this gate would look like in Minecraft. Here, we make use of a more clever arrangement of Redstone and torches that wouldn't seem immediately apparent.</p>
+
+      
+      <div class="schematic">
+        <iframe name="not-gate" src="https://cubical.xyz/project/VxKJ" frameborder="0" class="mc-schematic"></iframe>
+        <div class="schematic-desc">
+            click to focus, press esc to exit. powered by cubical  <span style="float:right;"> click 'refresh' if the screen is black. <button class="rel" onclick="var ifr=document.getElementsByName('not-gate')[0]; ifr.src=ifr.src;">[refresh]</button></span>
+        </div>
+        
+      </div>
+
+      <h3>The <span class="code">NAND</span> Gate- <span class="code">AND</span>'s Evil Twin</h3>
+
+      <p>Simply put, in order to create a <span class="code">NAND</span> gate, all we have to do is place an inverter in front of an <span class="code">AND</span> gate.</p>
+
+      <p>You may be wondering- if this gate is just a combination of the last two gates we learned, why bother learning it? It turns out that the <span class="code">NAND</span> gate (along with the <span class="code">NOR</span> gate that we'll see later) possess a special property that we'll explore later.</p>
+
+      <p>For now, just remember, an inverter in front of an <span class="code">AND</span> gate should do the trick. Below, you'll find the diagram, truth table, and Minecraft schematic.</p>
+
+      <img src="img/u2c2-2.png" alt="preset" class="inlinepic-big">
+
+      <div class="schematic">
+        <iframe name="not-gate" src="https://cubical.xyz/project/DYVE" frameborder="0" class="mc-schematic"></iframe>
+        <div class="schematic-desc">
+            click to focus, press esc to exit. powered by cubical  <span style="float:right;"> click 'refresh' if the screen is black. <button class="rel" onclick="var ifr=document.getElementsByName('not-gate')[0]; ifr.src=ifr.src;">[refresh]</button></span>
+        </div>
+        
+      </div>
+
+
+
+
+      
+      
+
+    
+
+      <div class="pagearrows">
+        <a href="u2c1.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u2c3.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+    </div>
+
+</body>

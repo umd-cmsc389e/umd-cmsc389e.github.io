@@ -1,0 +1,412 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[labels]{enumitem}
+\usepackage{tikz}
+\usepackage{alltt}
+\usepackage{tcolorbox}
+\usepackage{indentfirst}
+\usepackage[top = 1in, left = 1 in, right = 1 in, bottom = 1in]{geometry}
+\usepackage{sectsty}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{circuitikz}
+\usepackage{float}
+\usepackage{circuitikz}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\setlist{  
+  listparindent=\parindent,
+  parsep=1em
+}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\sectionfont{\fontsize{17}{15}\selectfont}
+\setlength{\parskip}{1em}
+
+\setlength{\parindent}{1cm}
+
+\newcommand{\createtitle}[4]{
+    {\Huge #1} \hfill  #2 \\
+    
+    \begin{tabular}{rl}
+        \textbf{Assigned: } & #3 \\
+        \textbf{Due: } & #4
+    \end{tabular}
+    \vspace{.75 in}}
+
+\newcommand{\mysubsection}[1]{
+    {\fontsize{13}{15}\selectfont\bf \item #1}}
+    
+\newenvironment{subenv}[2]
+{\section{#1}\vspace{.5em}#2\\\begin{enumerate}}
+{\end{enumerate}}
+
+\newcommand{\varin}[1]{\textcolor{red}{\texttt{#1}}}
+\newcommand{\varout}[1]{\textcolor{blue}{\texttt{#1}}}
+
+\newcommand{\myinput}{\varin{input }}
+\newcommand{\myoutput}{\varout{output }}
+
+\newcommand{\image}[2]{
+\begin{figure}[H]\begin{center}
+    \includegraphics[width=#2\linewidth]{#1}
+\end{center}\end{figure}}
+
+\newcommand{\tbd}{\textbf{TBD}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Akilesh Praveen}
+\fancyhead[RE,LO]{CMSC389E}
+
+\begin{document}
+
+\large
+
+{\fontfamily{lmdh}\selectfont{\Huge CMSC389E Project 1: \par Arithmetic Logic Unit- Logic Gates}}
+
+Assigned \textbf{Friday February 4}
+
+Due \textbf{Thursday February 10}
+
+\section{\fontfamily{lmdh}\selectfont{The First (Real) Project}}
+
+\textbf{Objective:} Understand how to build different types of logical gates within Minecraft and what they output.
+
+Welcome to the first project for 389E! Now, we get to finally start building our major computing circuits.
+It's imperative that you have completed Project 0 by this point; if you haven't, this would be a great time to talk to your instructors and let them know! 
+They can get you up to speed.
+
+The words of the day are \textbf{Logic Gates}. That'll be the main focus of this project, and we recommend taking a deeper look at them in case you need a review. Specifically, refer to Chapters 2.1 through 2.6 of the \href{https://cmsc-389e.github.io/digital-logic-computer-architecture-minecraft/index.html}{online textbook}.
+
+What follows is a quick reminder of the cumulative nature of projects, a conceptual overview of what our project will cover, and the project specification itself.
+
+\subsection{\fontfamily{lmdh}\selectfont{Projects are Cumulative}}
+
+Before we start, let's just go ahead and review project policy- projects in this class are cumulative. That is, they build on top of one another. (Except for this first one) This is only natural, as we're working towards building a fully featured computer at the end of the semester. 
+
+However, as we're not sadists, we will be releasing solutions for projects after they are due- which you \textbf{can} use as a basis for \textbf{subsequent projects}. We have deliberately created this model so that if one project does not go well for you, you will not be high and dry for the next one(s). You \textbf{may not} turn in a project's solution as your solution for that same project- you may only use it for subsequent projects. Examples:
+
+\begin{itemize}
+  \item \textbf{OK}- Building your Project 5 on top of the instructor provided Project 4 Solution and turning it in as your own Project 5 submission
+  \item \textbf{NOT OK}- Turning in the Project 3 instructor provided Solution as your own Project 3 submission
+\end{itemize}
+
+\section{\fontfamily{lmdh}\selectfont{Conceptual Overview: The ALU}}
+
+Each project moving forward will usually have a Conceptual Overview section, where we provide a few interesting tidbits of information about the focus of the project this week. You can usually skip it if you're in a hurry, but it's a great place to get some background information on the project that you'll be building.
+
+The \textbf{Arithmetic Logic Unit}, or \textbf{ALU} is where all the fancy math and logical operations on a computer happen, and it's housed in the CPU. In our case (and in the case of general computer architecture), this is pretty much limited to \textbf{logical \& arithmetic} operations on \textbf{integers}. To perform these functions on floating point numbers, one would usually make use of a Floating Point Unit.
+
+At the end of the day, all computers have to do math- usually a huge amount of it. Housed inside the CPUs of computers are usually multiple ALUs, all working at incredibly fast speeds to perform the functions requested of them.
+
+If you're interested, my challenge for you is to take a look online and see where the ALU is physically located in the chip on the computer (or phone!) that you're reading this project spec on.
+
+\section{\fontfamily{lmdh}\selectfont{Building the Logical Portion of the ALU}}
+
+In our case, we're going to start with the ALU when building our big CPU in Minecraft. We're going to split it up into a few parts, but you'll see why. Our ALU is going to be the real brains of the operation and it's going to have quite a few capabilities, but we're going to take it step by step.
+
+The first thing that we'll be doing- the topic of this project- will be \textbf{the logical operations}, i.e. \texttt{AND}, \texttt{OR}, \texttt{NOT}, \texttt{XOR}.
+
+First, you're going to want to load the project up. Do this using the following:
+
+\begin{tcolorbox}
+  \texttt{/test load 1}
+\end{tcolorbox}
+
+Before we start putting this project together for real, we're going to have to discuss \textbf{buses}. This is how we are going to handle wire management for our inputs and our outputs.
+
+Take a look at the input and output blocks that you have available. You'll notice that you have the following inputs: \varin{iA0}, \varin{iA1}, \varin{iA2} and \varin{iB0}, \varin{iB1}, \varin{iB2}.
+
+This is where all of your inputs will come in. You'll also find that you have a huge set of output blocks (sorry!). This is normal. Your goal is going to be, for each logical function in the set of \texttt{NOT}, \texttt{AND}, \texttt{OR} and \texttt{XOR}, perform the given function on the three sets of inputs, so that we can effectively have each of the logical operations done on 3-bit inputs.
+
+Here's an example. Suppose we were building the 3 \texttt{AND} gates. 
+You'd want to have your circuit fulfill the following logical formulae:
+
+\begin{tcolorbox}
+  \texttt{$$ \varin{iA0} \land \varin{iB0} \rightarrow \varout{oAND0} $$}
+  \texttt{$$ \varin{iA1} \land \varin{iB1} \rightarrow \varout{oAND1} $$}
+  \texttt{$$ \varin{iA2} \land \varin{iB2} \rightarrow \varout{oAND2} $$}
+\end{tcolorbox}
+
+You'll want to fulfill these logical requirements for all of the given logic gates as well. Overall, you'll be building 3 of each gate- which, by the way, isn't just an arbitrary number. We're working towards a 3-bit computer here, so we need the ability to perform all sorts of operations on 3-bit numbers in general. Hence, the ability to take in 3 bits of input and produce 3 bits of output.
+
+\section{\fontfamily{lmdh}\selectfont{Schematics}}
+
+Here's how this would look in a schematic, if we were to visualize this. You'll find the schematic setups for each gate as follows.
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Straight Lines [id:da7381635994363456] 
+\draw    (132,58) -- (132,220.17) ;
+%Straight Lines [id:da7848514350155817] 
+\draw    (150,58) -- (150,220.17) ;
+%Straight Lines [id:da8302964863935134] 
+\draw    (170,58) -- (170,220.17) ;
+%Straight Lines [id:da34955037883800877] 
+\draw    (223.33,58.67) -- (223.33,220.83) ;
+%Straight Lines [id:da6786658733704694] 
+\draw    (241.33,58.67) -- (241.33,220.83) ;
+%Straight Lines [id:da12919865074668824] 
+\draw    (261.33,58.67) -- (261.33,220.83) ;
+%Straight Lines [id:da7305483279108875] 
+\draw    (132,71) -- (374.33,71) ;
+\draw [shift={(132,71)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da5465669365377519] 
+\draw    (224,87.67) -- (374.33,87.67) ;
+\draw [shift={(224,87.67)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8071636079717495] 
+\draw    (149.33,115) -- (374.33,115) ;
+\draw [shift={(149.33,115)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da4793307324782463] 
+\draw    (241,131.56) -- (374.33,131.56) ;
+\draw [shift={(241,131.56)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da7597363793894083] 
+\draw    (170.67,163) -- (374.33,163) ;
+\draw [shift={(170.67,163)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da12533768391816502] 
+\draw    (261.83,179.44) -- (374.33,179.44) ;
+\draw [shift={(261.83,179.44)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: And Gate [id:dp7063264035414338] 
+\draw   (384.73,67) -- (400.33,67) .. controls (408.94,67) and (415.93,72.53) .. (415.93,79.33) .. controls (415.93,86.14) and (408.94,91.67) .. (400.33,91.67) -- (384.73,91.67) -- (384.73,67) -- cycle (374.33,71.11) -- (384.73,71.11) (374.33,87.56) -- (384.73,87.56) (415.93,79.33) -- (426.33,79.33) ;
+%Shape: And Gate [id:dp05499100878603014] 
+\draw   (384.73,111) -- (400.33,111) .. controls (408.94,111) and (415.93,116.53) .. (415.93,123.33) .. controls (415.93,130.14) and (408.94,135.67) .. (400.33,135.67) -- (384.73,135.67) -- (384.73,111) -- cycle (374.33,115.11) -- (384.73,115.11) (374.33,131.56) -- (384.73,131.56) (415.93,123.33) -- (426.33,123.33) ;
+%Shape: And Gate [id:dp7228798887337888] 
+\draw   (384.73,158.89) -- (400.33,158.89) .. controls (408.94,158.89) and (415.93,164.42) .. (415.93,171.22) .. controls (415.93,178.03) and (408.94,183.56) .. (400.33,183.56) -- (384.73,183.56) -- (384.73,158.89) -- cycle (374.33,163) -- (384.73,163) (374.33,179.44) -- (384.73,179.44) (415.93,171.22) -- (426.33,171.22) ;
+
+% Text Node
+\draw (119,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA0}}};
+% Text Node
+\draw (140.33,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA1}}};
+% Text Node
+\draw (161,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA2}}};
+% Text Node
+\draw (211.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB0}}};
+% Text Node
+\draw (233,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB1}}};
+% Text Node
+\draw (253.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB2}}};
+% Text Node
+\draw (431,69) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAND0}}};
+% Text Node
+\draw (431.67,110.56) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAND1}}};
+% Text Node
+\draw (431.67,160.56) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAND2}}};
+
+
+\end{tikzpicture}
+
+Notice how the input wires for \varin{iA0}, \varin{iA1}, \varin{iA2}, \varin{iB0}, \varin{iB1}, \varin{iB2} can be continued downwards. This was done on purpose. You will have to repeat this process for the \texttt{OR} and \texttt{XOR} gates below this.
+
+Here is the diagram for \texttt{OR}. Assume that the wires for the inputs are simply continued from above. That is, this can go either above or below the circuits in the above diagram and we should be fine.
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Straight Lines [id:da7381635994363456] 
+\draw    (132,58) -- (132,220.17) ;
+%Straight Lines [id:da7848514350155817] 
+\draw    (150,58) -- (150,220.17) ;
+%Straight Lines [id:da8302964863935134] 
+\draw    (170,58) -- (170,220.17) ;
+%Straight Lines [id:da34955037883800877] 
+\draw    (223.33,58.67) -- (223.33,220.83) ;
+%Straight Lines [id:da6786658733704694] 
+\draw    (241.33,58.67) -- (241.33,220.83) ;
+%Straight Lines [id:da12919865074668824] 
+\draw    (261.33,58.67) -- (261.33,220.83) ;
+%Straight Lines [id:da7305483279108875] 
+\draw    (132,71) -- (374.33,71) ;
+\draw [shift={(132,71)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da5465669365377519] 
+\draw    (224,87.67) -- (374.33,87.67) ;
+\draw [shift={(224,87.67)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8071636079717495] 
+\draw    (149.33,115) -- (374.33,115) ;
+\draw [shift={(149.33,115)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da4793307324782463] 
+\draw    (241,131.56) -- (374.33,131.56) ;
+\draw [shift={(241,131.56)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da7597363793894083] 
+\draw    (170.67,163) -- (374.33,163) ;
+\draw [shift={(170.67,163)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da12533768391816502] 
+\draw    (261.83,179.44) -- (374.33,179.44) ;
+\draw [shift={(261.83,179.44)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: Or Gate [id:dp5119847561450339] 
+\draw   (382.08,158.5) -- (395,158.5) .. controls (404.01,158.72) and (412.06,163.6) .. (415.67,171) .. controls (412.06,178.4) and (404.01,183.28) .. (395,183.5) -- (382.08,183.5) .. controls (387.62,175.76) and (387.62,166.24) .. (382.08,158.5) -- cycle (374.33,162.67) -- (384.67,162.67) (374.33,179.33) -- (384.67,179.33) (415.67,171) -- (426,171) ;
+%Shape: Or Gate [id:dp9567361208669709] 
+\draw   (382.08,110.72) -- (395,110.72) .. controls (404.01,110.95) and (412.06,115.82) .. (415.67,123.22) .. controls (412.06,130.63) and (404.01,135.5) .. (395,135.72) -- (382.08,135.72) .. controls (387.62,127.99) and (387.62,118.46) .. (382.08,110.72) -- cycle (374.33,114.89) -- (384.67,114.89) (374.33,131.56) -- (384.67,131.56) (415.67,123.22) -- (426,123.22) ;
+%Shape: Or Gate [id:dp3012440469468285] 
+\draw   (382.08,67) -- (395,67) .. controls (404.01,67.22) and (412.06,72.1) .. (415.67,79.5) .. controls (412.06,86.9) and (404.01,91.78) .. (395,92) -- (382.08,92) .. controls (387.62,84.26) and (387.62,74.74) .. (382.08,67) -- cycle (374.33,71.17) -- (384.67,71.17) (374.33,87.83) -- (384.67,87.83) (415.67,79.5) -- (426,79.5) ;
+
+% Text Node
+\draw (119,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA0}}};
+% Text Node
+\draw (140.33,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA1}}};
+% Text Node
+\draw (161,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA2}}};
+% Text Node
+\draw (211.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB0}}};
+% Text Node
+\draw (233,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB1}}};
+% Text Node
+\draw (253.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB2}}};
+% Text Node
+\draw (431,69) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oOR0}}};
+% Text Node
+\draw (431.67,110.56) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oOR1}}};
+% Text Node
+\draw (431.67,160.56) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oOR2}}};
+
+
+\end{tikzpicture}
+
+As you could guess, the diagram for what you need to build for \texttt{XOR} looks pretty much identical. Again, you will be extending the input wires downwards, so the result will be 6 very long wires (with repeaters to preserve the signal) going downwards, with all these logic gates branching off of them.
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Straight Lines [id:da7381635994363456] 
+\draw    (132,58) -- (132,220.17) ;
+%Straight Lines [id:da7848514350155817] 
+\draw    (150,58) -- (150,220.17) ;
+%Straight Lines [id:da8302964863935134] 
+\draw    (170,58) -- (170,220.17) ;
+%Straight Lines [id:da34955037883800877] 
+\draw    (223.33,58.67) -- (223.33,220.83) ;
+%Straight Lines [id:da6786658733704694] 
+\draw    (241.33,58.67) -- (241.33,220.83) ;
+%Straight Lines [id:da12919865074668824] 
+\draw    (261.33,58.67) -- (261.33,220.83) ;
+%Straight Lines [id:da7305483279108875] 
+\draw    (132,71) -- (374.33,71) ;
+\draw [shift={(132,71)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da5465669365377519] 
+\draw    (224,87.67) -- (374.33,87.67) ;
+\draw [shift={(224,87.67)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8071636079717495] 
+\draw    (149.33,115) -- (374.33,115) ;
+\draw [shift={(149.33,115)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da4793307324782463] 
+\draw    (241,131.56) -- (374.33,131.56) ;
+\draw [shift={(241,131.56)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da7597363793894083] 
+\draw    (170.67,163) -- (374.33,163) ;
+\draw [shift={(170.67,163)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da12533768391816502] 
+\draw    (261.83,179.44) -- (374.33,179.44) ;
+\draw [shift={(261.83,179.44)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: Nor Gate [id:dp49055050087359464] 
+\draw   (381.51,66.75) -- (393.47,66.75) .. controls (401.81,66.97) and (409.27,71.85) .. (412.6,79.25) .. controls (409.27,86.65) and (401.81,91.53) .. (393.47,91.75) -- (381.51,91.75) .. controls (386.64,84.01) and (386.64,74.49) .. (381.51,66.75) -- cycle (374.33,70.92) -- (383.9,70.92) (374.33,87.58) -- (383.9,87.58) (418.35,79.25) -- (426,79.25) (412.6,79.25) .. controls (412.6,77.87) and (413.89,76.75) .. (415.48,76.75) .. controls (417.06,76.75) and (418.35,77.87) .. (418.35,79.25) .. controls (418.35,80.63) and (417.06,81.75) .. (415.48,81.75) .. controls (413.89,81.75) and (412.6,80.63) .. (412.6,79.25) -- cycle ;
+%Shape: Nor Gate [id:dp2698411982135489] 
+\draw   (381.51,110.72) -- (393.47,110.72) .. controls (401.81,110.95) and (409.27,115.82) .. (412.6,123.22) .. controls (409.27,130.63) and (401.81,135.5) .. (393.47,135.72) -- (381.51,135.72) .. controls (386.64,127.99) and (386.64,118.46) .. (381.51,110.72) -- cycle (374.33,114.89) -- (383.9,114.89) (374.33,131.56) -- (383.9,131.56) (418.35,123.22) -- (426,123.22) (412.6,123.22) .. controls (412.6,121.84) and (413.89,120.72) .. (415.48,120.72) .. controls (417.06,120.72) and (418.35,121.84) .. (418.35,123.22) .. controls (418.35,124.6) and (417.06,125.72) .. (415.48,125.72) .. controls (413.89,125.72) and (412.6,124.6) .. (412.6,123.22) -- cycle ;
+%Shape: Nor Gate [id:dp9500290468940371] 
+\draw   (381.51,158.75) -- (393.47,158.75) .. controls (401.81,158.97) and (409.27,163.85) .. (412.6,171.25) .. controls (409.27,178.65) and (401.81,183.53) .. (393.47,183.75) -- (381.51,183.75) .. controls (386.64,176.01) and (386.64,166.49) .. (381.51,158.75) -- cycle (374.33,162.92) -- (383.9,162.92) (374.33,179.58) -- (383.9,179.58) (418.35,171.25) -- (426,171.25) (412.6,171.25) .. controls (412.6,169.87) and (413.89,168.75) .. (415.48,168.75) .. controls (417.06,168.75) and (418.35,169.87) .. (418.35,171.25) .. controls (418.35,172.63) and (417.06,173.75) .. (415.48,173.75) .. controls (413.89,173.75) and (412.6,172.63) .. (412.6,171.25) -- cycle ;
+
+% Text Node
+\draw (119,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA0}}};
+% Text Node
+\draw (140.33,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA1}}};
+% Text Node
+\draw (161,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA2}}};
+% Text Node
+\draw (211.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB0}}};
+% Text Node
+\draw (233,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB1}}};
+% Text Node
+\draw (253.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB2}}};
+% Text Node
+\draw (431,69) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oXOR0}}};
+% Text Node
+\draw (431.67,110.56) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oXOR1}}};
+% Text Node
+\draw (431.67,160.56) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oXOR2}}};
+
+\end{tikzpicture}
+
+Finally, we can tackle \texttt{NOT}, which is probably the easiest of all of them. It's a bit of a special gate, as we only need to negate the input, and nothing else. 
+
+We'll be taking \varin{iA0}, \varin{iA1}, and \varin{iA2}, and negating their output, then sending that into \varout{oNOT0}, \varout{oNOT1}, and \varout{oNOT2}.
+
+The diagram is below. Note that for this gate, you will not have to extend the \textbf{buses} for the \varout{B} output wires for this gate- however, we do recommend you do, as it might help you with future projects.
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Straight Lines [id:da7381635994363456] 
+\draw    (132,58) -- (132,220.17) ;
+%Straight Lines [id:da7848514350155817] 
+\draw    (150,58) -- (150,220.17) ;
+%Straight Lines [id:da8302964863935134] 
+\draw    (170,58) -- (170,220.17) ;
+%Straight Lines [id:da7305483279108875] 
+\draw    (132,71) -- (374.33,71) ;
+\draw [shift={(132,71)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8071636079717495] 
+\draw    (149.33,115) -- (374.33,115) ;
+\draw [shift={(149.33,115)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da7597363793894083] 
+\draw    (170.67,163) -- (374.33,163) ;
+\draw [shift={(170.67,163)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: Not/Inverter Gate [id:dp24884937652220374] 
+\draw   (383.9,57.94) -- (412.6,71) -- (383.9,84.06) -- (383.9,57.94) -- cycle (374.33,71) -- (383.9,71) (418.35,71) -- (426,71) (412.6,71) .. controls (412.6,69.56) and (413.89,68.39) .. (415.48,68.39) .. controls (417.06,68.39) and (418.35,69.56) .. (418.35,71) .. controls (418.35,72.44) and (417.06,73.61) .. (415.48,73.61) .. controls (413.89,73.61) and (412.6,72.44) .. (412.6,71) -- cycle ;
+%Shape: Not/Inverter Gate [id:dp7340956115169444] 
+\draw   (383.9,101.94) -- (412.6,115) -- (383.9,128.06) -- (383.9,101.94) -- cycle (374.33,115) -- (383.9,115) (418.35,115) -- (426,115) (412.6,115) .. controls (412.6,113.56) and (413.89,112.39) .. (415.48,112.39) .. controls (417.06,112.39) and (418.35,113.56) .. (418.35,115) .. controls (418.35,116.44) and (417.06,117.61) .. (415.48,117.61) .. controls (413.89,117.61) and (412.6,116.44) .. (412.6,115) -- cycle ;
+%Shape: Not/Inverter Gate [id:dp2487089048650788] 
+\draw   (383.9,149.94) -- (412.6,163) -- (383.9,176.06) -- (383.9,149.94) -- cycle (374.33,163) -- (383.9,163) (418.35,163) -- (426,163) (412.6,163) .. controls (412.6,161.56) and (413.89,160.39) .. (415.48,160.39) .. controls (417.06,160.39) and (418.35,161.56) .. (418.35,163) .. controls (418.35,164.44) and (417.06,165.61) .. (415.48,165.61) .. controls (413.89,165.61) and (412.6,164.44) .. (412.6,163) -- cycle ;
+
+% Text Node
+\draw (119,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA0}}};
+% Text Node
+\draw (140.33,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA1}}};
+% Text Node
+\draw (161,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA2}}};
+% Text Node
+\draw (431.5,62) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oNOT0}}};
+% Text Node
+\draw (432.67,104.06) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oNOT1}}};
+% Text Node
+\draw (431.17,154.56) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oNOT2}}};
+
+
+\end{tikzpicture}
+
+You will be doing all of these one after the other, with the 6 input gates extended down all the way.
+
+\section{Submission}
+
+You will be submitting this in the same way that you did for the previous project. First, run the test start command. 
+
+\begin{tcolorbox}
+  \texttt{/test start}
+\end{tcolorbox}
+
+Remember, the six inputs all have to be connected to the ($4 \times 3$) logic gates at the same time. The tests will ensure that all your connections are hooked up correctly. 
+
+As always, attach a screencap of your tests passing, along with a zip file of your world in the assignment submission. Ask on Piazza if you have any questions!
+
+\end{document}

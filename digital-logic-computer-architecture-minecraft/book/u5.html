@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+      <h1>Arithmetic Logic Unit</h1>
+      <hr>
+
+      <h3>Introduction</h3>
+
+      <p>Ok, so we know how to add, subtract, theoretically multiply, and conduct logical operations. Now, to put it all together into the ALU, a core part of our CPU.</p>
+
+      <p>An ALU is a digital circuit that performs all the arithmetic and logic in a program in a central place. Imagine you are building an assembler, and you want to instruct the CPU to load a value into two registers, add them, then XOR the values in both registers and save the result in a third register. In every operation, the CPU would consult the ALU to come up with the output given some inputs.</p>
+
+      <img src="img/u5-1.gif" alt="ALU" class="inlinepic-med"> 
+
+      <p>The final ALU we will build models the above diagram. At a fundamental level, we will input two integers. We use a <strong>opcode</strong> to instruct the ALU on which operation to perform (such as add, subtract, OR, etc.). An opcode is typically a n-bit value, and, in our context, is 4 bits for 16 operations. The ALU spits out both a resulting integer based on the operation selected and some status flags (<a href="u9.html"><strong>section 9</strong></a>).</p>
+
+      <h3>How it Works</h3>
+      <p>The ALU seems daunting but really it is just putting together what you already know. If we take the above diagram, and look under the hood, this would be a potential design of the ALU.</p>
+
+      <img src="img/u5-2.jpg" alt="ALUbig" class="inlinepic-med">
+
+      <p>The implementation of the ALU design is subjective, but in most cases you need to have some decoder to indicate which operation you want to perform, or the <strong>opcode</strong>. On our simple ALUs, you would then take the bits in the same positions from the two inputs, indicated by <span class="code">A0</span> and <span class="code">B0</span>, and perform all selected operations, which were <span class="code">add</span>, <span class="code">AND</span>, <span class="code">NOR</span>, and <span class="code">XOR</span> in this context. The opcode would then allow you to create a selection in a nx1 <a href="u5c1.html">multiplexer</a>, where n is the number of operations your ALU has.</p>
+
+      <p>Alternatively, instead of using a multiplexer you could use the decoder directly and <span class="code">AND</span> the selected opcode with the result of the specific operation needed, which means only those bits get forwarded to the output. This can make things easier to understand, but you would now need space to conduct a bunch more <span class="code">AND</span> operations. </p>
+        
+      <p>For example, let's say our opcode selected was <span class="code">1010</span> for the <span class="code">ADD</span> operation and we forwarded a signal to the result of the <span class="code">ADD</span> gate, which we say is <span class="code">1001001</span>. Conducting an <span class="code">AND</span> operation with each bit in <span class="code">1001001</span>, would yield the same thing. In other words, we have some opcode signal of 1 or 0, and only one operation should be fed a signal of 1 based on the decoder.</p>
+
+      <div class="disclaimer">
+        <h3>Disclaimer</h3>
+
+        <p>You will need to be comfortable with logic gates, adders, encoders, and decoders for this portion of the book. Moreover, we do take some liberties in simplifying the components of a computer in digital logic circuits, and make it easiest to understand in the context of this class. If you want to learn more about the ALU, please feel free to delve into an engineering department digital logic class.</p>
+      </div>
+      
+
+      <div class="pagearrows">
+        <a href="u3c7.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u5c1.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>

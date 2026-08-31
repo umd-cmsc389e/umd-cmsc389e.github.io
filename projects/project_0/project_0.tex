@@ -1,0 +1,165 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[labels]{enumitem}
+\usepackage{tikz}
+\usepackage{alltt}
+\usepackage{tcolorbox}
+\usepackage{indentfirst}
+\usepackage[top = 1in, left = 1 in, right = 1 in, bottom = 1in]{geometry}
+\usepackage{sectsty}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{circuitikz}
+\usepackage{float}
+\usepackage{circuitikz}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\setlist{  
+  listparindent=\parindent,
+  parsep=1em
+}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\sectionfont{\fontsize{17}{15}\selectfont}
+\setlength{\parskip}{1em}
+
+\setlength{\parindent}{1cm}
+
+\newcommand{\createtitle}[4]{
+    {\Huge #1} \hfill  #2 \\
+    
+    \begin{tabular}{rl}
+        \textbf{Assigned: } & #3 \\
+        \textbf{Due: } & #4
+    \end{tabular}
+    \vspace{.75 in}}
+
+\newcommand{\mysubsection}[1]{
+    {\fontsize{13}{15}\selectfont\bf \item #1}}
+    
+\newenvironment{subenv}[2]
+{\section{#1}\vspace{.5em}#2\\\begin{enumerate}}
+{\end{enumerate}}
+
+\newcommand{\varin}[1]{\textcolor{blue}{\texttt{#1}}}
+\newcommand{\varout}[1]{\textcolor{red}{\texttt{#1}}}
+
+\newcommand{\myinput}{\varin{input }}
+\newcommand{\myoutput}{\varout{output }}
+
+\newcommand{\image}[2]{
+\begin{figure}[H]\begin{center}
+    \includegraphics[width=#2\linewidth]{#1}
+\end{center}\end{figure}}
+
+\newcommand{\tbd}{\textbf{TBD}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Jordan Marry}
+\fancyhead[RE,LO]{CMSC389E}
+
+\begin{document}
+
+\large
+
+{\fontfamily{lmdh}\selectfont{\Huge CMSC389E Project 0: \par Tutorial Island (Or Desert)}}
+
+Assigned \textbf{Friday January 28}
+
+Due \textbf{Thursday February 3rd}
+
+\section{\fontfamily{lmdh}\selectfont{Welcome!}}
+
+Welcome to CMSC389E- Digital Logic Design Through Minecraft at UMD! We're really excited to have you along this semester, and we wanted to ensure that this first project gives you ample opportunity to see the following:
+
+\begin{itemize}
+  \item[1.] Setup \& Installation
+  \item[2.] How projects are done in this class
+  \item[3.] Understand how Minecraft redstone works
+\end{itemize}
+
+It's also important to note that some understanding of Minecraft's mechanics are recommended for this course. However, we understand that for a lot of you, it might be the first time that you are picking up Minecraft in a while, or that you were interested and now you want to learn. We have provided helpful resources in the form of the online textbook, linked on the course website. It should give you some insight into how to control your character, how to interact with the world, basic world configurations, and crafting.
+
+Should you feel lost looking at the starter resources that we have provided to you, please feel free to check YouTube for tutorials, hop into a new world and flounder around (recommended!), and of course, reach out to your instructors (who have been playing Minecraft for far too long.) Happy crafting!
+
+\subsection{\fontfamily{lmdh}\selectfont{Projects are Cumulative}}
+
+Just a quick aside- projects in this class are cumulative. That is, they build on top of one another. (Except for this first one) This is only natural, as we're working towards building a fully featured computer at the end of the semester. 
+
+However, as we're not sadists, we will be releasing solutions for projects after they are due- which you \textbf{can} use as a basis for \textbf{subsequent projects}. We have deliberately created this model so that if one project does not go well for you, you will not be high and dry for the next one(s). You \textbf{may not} turn in a project's solution as your solution for that same project- you may only use it for subsequent projects. Examples:
+
+\begin{itemize}
+  \item \textbf{OK}- Building your Project 5 on top of the instructor provided Project 4 Solution and turning it in as your own Project 5 submission
+  \item \textbf{NOT OK}- Turning in the Project 3 instructor provided Solution as your own Project 3 submission
+\end{itemize}
+
+\subsection{\fontfamily{lmdh}\selectfont{Clone}}
+
+There will certainly be some repetetive building in this class. That is, you will find yourself building the same structures over and over again in a few cases (e.g. adders, inverters, etc.). 
+
+To protect yourself from carpal tunnel, we as the instructors \textbf{highly reccomend} familiarizing yourself with the \texttt{clone} command in Minecraft. The version that we use with the mod has great support for it, and there are ample tutorials online.
+
+\begin{tcolorbox}
+  \texttt{/clone x1 y1 z1 x2 y2 z2    x3 y3 z3    replace}
+\end{tcolorbox}
+
+You may also take a look at  \href{https://minecraft.gamepedia.com/Commands/clone}{the documentation site}.
+
+You are also allowed to use the popular third party \texttt{WorldEdit} mod at your own risk (we have attempted to create compatibility with it, but can't guarantee anything) if you so desire. However, we will not be able to help you debug/build with it, as we don't remember how to use it.
+
+\subsection{\fontfamily{lmdh}\selectfont{Mods \& Hall of Fame}}
+
+This class was previously taught by the talented Alexander Brassel. It's thanks to him and his sibling Jamie Brassel that we have the incredibly robust and versatile CMSC389E Minecraft Mod, the very fabric by which this class is crafted. 
+
+You may find detailed installation instructions on the course website. Please arrange a meeting with the instructors if you are unable to get the mod installed.
+
+These project specifications are adapted from the work of the talented Alex and honorable Ashwath Krishnan, who worked on this class previously.
+
+\section{\fontfamily{lmdh}\selectfont{The First Project!}}
+
+Ok, let's get to work! Go ahead and open Minecraft after completing the installation steps listed on the \href{https://cmsc-389e.github.io/setup.html}{setup section of the website}.
+
+Next, create a new world. Name it \texttt{Project0}. Make sure to select 'enable cheats' when you do it, and make it Creative mode. Details on how to do this exactly can be found on the \href{https://cmsc-389e.github.io/digital-logic-computer-architecture-minecraft/index.html}{online textbook}, in \textbf{section 1.2}. The day/night cycle of the game has been removed in the mod, for your convenience.
+
+\subsection{\fontfamily{lmdh}\selectfont{New Blocks}}
+
+The mod itself introduces some new blocks- the \texttt{in node} and the \texttt{out node}. You will find them to be red and blue blocks in your creative mode inventory (the easiest way to find them is to search for them).
+
+Take this time to check the video linked under the week 0 tab of the course website. It should provide a guide on how to invert a redstone signal.
+
+\subsection{\fontfamily{lmdh}\selectfont{What to Build}}
+
+Remember, in terms of the actually named blocks, you'll be using the single \textcolor{red}{\texttt{iC}} in node block. Leading into it from one side, you'll bring in the direct, unchanged signal from \textcolor{blue}{\texttt{oZ}}, and from the other side, bring in the inverted signal from \textcolor{blue}{\texttt{oG}}. (Right click on the node blocks to change names) 
+
+\subsection{\fontfamily{lmdh}\selectfont{Testing Framework}}
+
+You now have the testing framework at your disposal. First, when you create your \texttt{Project0} world, you'll want to execute the following command in the minecraft console.
+
+\begin{tcolorbox}
+  \texttt{/test load 0}
+\end{tcolorbox}
+
+Once you do this, the game should indicate that it has properly loaded project 0. This is good. The next thing you'll want to do is place the 
+
+Finally, once you've built everything out, you can test it out using the following command. It will indicate to you if you are missing/overusing in/out nodes.
+
+\begin{tcolorbox}
+  \texttt{/test start}
+\end{tcolorbox}
+
+Continue running the tests until you have a successful run! Take a screenshot of this and attach it to your submission as well.
+
+    \section{\fontfamily{lmdh}\selectfont{Submission}}
+    
+        \par For this project, we will be submitting your creation via worldfile. For future projects, we will have the submit server set up for this purpose. What you'll need to do is enter your Minecraft directory, make a \texttt{.zip} archive of your world titled 'Project0', then upload it to the assignment for Project 0 on ELMS. (Elms will be opened soon).
+        
+\end{document}

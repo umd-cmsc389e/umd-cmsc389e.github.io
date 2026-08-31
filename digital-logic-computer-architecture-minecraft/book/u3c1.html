@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+      <h1>Half-Adders</h1>
+      <hr>
+
+      <h3>The Simplest Addition</h3>
+
+      <p>If we ultimately want to be able to add any binary number together, we've got to start somewhere simple.</p>
+
+      <p>Let's start with the simplest general addition operation you could ever perform with binary. In other words, let's see if we can design a circuit that can add <strong>two single-digit</strong> binary numbers. </p>
+
+      <h3>Our Inputs</h3>
+
+      <p>First things first, how would you go about doing this?</p>
+
+      <p>In terms of representing two single-digit binary numbers- we're in luck. In the previous chapter, we represented input signals with redstone wire. Here, we'll be doing just the same. A redstone wire in the 'on' state will represent a 1, while a redstone wire in the 'off' state will represent a 0.</p>
+
+      <p>Following that line of thinking, we can understand that if we're to add two single-digit binary numbers, we're going to need two redstone wires coming into our 'adder' circuit.</p>
+
+      <h3>Our Outputs- Why We Need a 'Carry' Bit</h3>
+
+      <p>At first glance, one may incorrectly claim that we only require one output to display the sum of the two single-digit binary numbers that we will be adding. However, if you consider the full range of possibilities when adding two single-digit binary numbers, you'll quickly discover that this assumption is foolhardy.</p>
+
+      <p>Let's consider some examples.</p>
+
+      <p>Suppose we wanted to add <span class="code">1</span> and <span class="code">0</span>. The answer is quite simple, it's <span class="code">1</span>.</p>
+
+      <p>Now suppose we wanted to add <span class="code">0</span> and <span class="code">0</span>. The answer here is also simple- we'd just have <span class="code">0</span>.</p>
+
+      <p>However, let's say we wanted to add <span class="code">1</span> and <span class="code">1</span>. Knowing the nuances of binary, we can say that the result will be <span class="code">10</span>. What would our circuit's result be, then? If we have a single output wire, there's no way we can represent <span class="code">10</span>.</p>
+
+      <p>This is the fundamental argument as to why we need two output wires. We'll label one of them 'sum', to represent the sum of the two values, and the other one 'carry', to represent the literal 'carryover' that occurs when adding 1 and 1.</p>
+
+      <p>Here's another way to look at it- suppose this picture represents our addition of <span class="code">1</span> and <span class="code">1</span>:</p>
+
+      <img src="img/u3c1-1.png" class="inlinepic" alt="">
+
+      <p>Below is the result, after performing the addition.</p>
+
+      <img src="img/u3c1-2.png" class="inlinepic" alt="">
+
+
+      <p>After we perform the addition, we end up with a 'carry' value. This is the sort of value we will want to be storing in our 'carry' output bit.</p>
+
+      <h3>Performing the Actual Operation</h3>
+
+      <p>Now we know our inputs, and we know our possible outputs. Consider the fact that we are working with two inputs that can either be one or two. Knowing this, and using the knowledge of logic gates we established in the previous section, let's build our addition circuit by leveraging those.</p>
+
+      <p>A good place to start is a truth table. In order to establish a truth table for our single-digit addition circuit, all we need to do is list out all the possibilities. In the truth table below, I've labelled the 'sum' bit and the 'carry' bit for our convenience.</p>
+
+      <img src="img/u3c1-3.png" class="inlinepic-big" alt="">
+
+      <p>Now that we can clearly see the truth table in front of us, we can try and put together a combination of the basic logic gates that will produce the outputs that we want.</p>
+
+      <p>Let's do exactly that. It helps to isolate both the output bits and see what they need to be. Upon closer inspection, it appears that the 'sum' bit could be determined with an <span class="code">XOR</span> gate, and the 'carry' bit could be determined with an <span class="code">AND</span> gate.</p>
+
+      <p>Believe it or not, that's all we need! Here's the (simple) circuit that satisfies that truth table.</p>
+
+      <img src="img/u3c1-4.png" class="inlinepic-big" alt="">
+
+      <p>And that's that! We now have a reliable circuit that can add two one-digit binary numbers (A and B), and produce a sum and a carry bit.</p>
+      
+      
+     
+
+
+
+
+      
+      
+
+    
+
+      <div class="pagearrows">
+        <a href="u3.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u3c2.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+      <h1>Multiplexers</h1>
+      <hr>
+    
+      <p>Multiplexers are more applicable the further you are in building your PC, but they are vastly important in helping you pick which operation to perform.</p>
+
+      <h3>Introduction</h3>
+
+      <p>Multiplexers, or muxes, are devices that allow us to select one of n-inputs and forward that signal to the output wire. </p>
+
+      <p>Here is what a 2x1 mux looks like in digital logic. Note that the triangle is a <span class="code">NOT</span> gate (inverter), the second layer contains two <span class="code">AND</span> gates, and the third layer consists of one <span class="code">OR</span> gate.</p>
+
+      <img src="img/u5c1-2.png" alt="mux" class="inlinepic-big">
+
+      <table>
+        <thead>
+            <tr>
+                <th>Select Line (S<sub>0</sub>)</th>
+                <th>Input I<sub>0</sub></th>
+                <th>Input I<sub>1</sub></th>
+                <th>Output (Y)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>0</td>
+                <td>0</td>
+                <td>X</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>0</td>
+                <td>1</td>
+                <td>X</td>
+                <td>1</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>X</td>
+                <td>0</td>
+                <td>0</td>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>X</td>
+                <td>1</td>
+                <td>1</td>
+            </tr>
+        </tbody>
+      </table>
+      <p></p>
+      <p></p>
+
+      <p>Recall in the introduction of the ALU, we mentioned that we use an opcode to decide which operation we want to perform. Depending on the number of operations your ALU has, you can make a nx1 mux to only output the result from the operation we want.</p>
+
+      <img src="img/u5c1-3.png" alt="assembly" class="inlinepic">
+
+      <p>Muxes also are extremely useful when operations have different purposes. Note that although add and addi operations have three operands, the addi shares the same write register and input register, <code>$t0</code>. Or observe the lw operation that puts a value into a register, but it only has two operands. How would our ALU handle inputs of different formats? Muxes can help you pick and choose which bits represent what.</p>
+
+      <img src="img/u5c1-1.png" alt="assembly" class="inlinepic-big">
+
+      <p>Note, muxes and decoders are alike in that they have multiple inputs, <strong>BUT</strong> they are not the exact same. Muxes allow you to filter many inputs into one output line, while a decoder typically converts some coded input into one output line. Although muxes can have n-bit selectors that function like decoders, the concept holds in that muxes deal with input signals.</p>
+      <p></p>
+
+      <h3>Muxes in Minecraft</h3>
+
+      <p>Muxes in minecraft follow the diagram almost 1 to 1. There are many designs to make a multiplexer, and the community has invested in creating far more compact designs. The one we utilize here for demonstration is accredited to <a href="https://www.youtube.com/c/Mattbatwings"><strong>matbatwings</strong></a>. The one we showcase uses two comparators in subtract mode, one for each input and a selector torch that toggles between trasmitting signals from one of the two inputs.</p>
+
+      <img src="img/u5c1-4.png" alt="mux2" class="inlinepic-big">
+
+      <p>If you would like to look at this further or other combinational builds, you can download the following world and upload it to your .Minecraft > saves folder to open it up.</p>
+
+      <a href="./worlds/u5c1-1.zip" download class="text-primary">
+        World File
+      </a>
+
+      <div class="pagearrows">
+        <a href="u5.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u6.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>

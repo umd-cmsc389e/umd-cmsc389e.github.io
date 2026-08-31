@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+    <h1>Opcontroller</h1>
+    <hr/>
+    <p>
+        There is a big problem with our current setup, however. The issue occurs when we have two register operations. In general, <code>add</code> operations may look like:
+    </p>
+    <pre>
+add r2 r1 r1
+addi r2 7
+    </pre>
+    <p>
+        In the first instruction, we add <code>r1</code> to <code>r1</code> and then write that value to <code>r2</code> in memory. In the second instruction, we add <code>r2</code> with <code>7</code>, and store that result in <code>r2</code>. 
+        If we could only read a register one at a time, it would be very difficult to handle <code>add</code> operations with two operands because we would need the value of both input registers to be read at once. 
+    </p>
+    <h3>How to read two registers at once?</h3>
+    <p>
+        There are a few ways to go about this. The following depictions are accredited to matbatwings:
+    </p>
+    <p>
+        <strong>True Dual Read:</strong> We only store the memory once but we can read two registers using two separate lines (e.g., <code>r1</code> on one line and <code>r3</code> on another line).
+    </p>
+
+    <img src="img/u6c3-1.png" alt="true_dual_read" class="inlinepic-med">
+
+
+    <p>
+        <strong>Simulated Dual Read:</strong> We duplicate all the memory and read from two lines. Although true dual read is more efficient, this method is FAR easier to implement in Vanilla Minecraft, so this is the way we show it in class.
+    </p>
+
+    <img src="img/u6c3-2.png" alt="simulated_dual_read" class="inlinepic-med">
+
+    <h3>Putting it all together</h3>
+
+    <p>Here is what our final register file looks like with true dual read. The following depiction can be interpreted as storing 8 one-bit registers. Note that the output of the flip flops will feed to two distinct read lines that will each require their own read address such as 001 or 010 (as denoted with the ticks on the outer edge of the muxes).</p>
+
+    <img src="img/u6c3-3.png" alt="simulated_dual_read" class="inlinepic-med">
+
+
+      <div class="pagearrows">
+        <a href="u6c2.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u7.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>

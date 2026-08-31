@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+    <h1>Latches</h1>
+    <hr/>
+
+    <p>Latches and flip-flops are memory elements that store a single bit of data. They are crucial for building static random access memory (SRAM) and CPU registers.</p>
+    <ul>
+        <li><strong>Latches</strong> are level-triggered — their outputs change immediately when inputs change.</li>
+        <li><strong>Flip-flops</strong> are edge-triggered — outputs only change on a clock signal's rising or falling edge. This makes them essential for synchronizing components in a CPU.</li>
+    </ul>
+    
+    <p>All the designs that follow are extensions of this foundation — the building blocks of a <em><strong>register file</strong></em>.</p>
+    
+    <h3>SR Latches</h3>
+    <p>The most basic type of latch. SR latches have two input signals: <strong>Set (S)</strong> and <strong>Reset (R)</strong>. The output <strong>Q</strong> is the stored memory state, while <strong>Q'</strong> (Q complement) is the opposite.</p>
+    
+    <p>Behavior:</p>
+    <ul>
+        <li><strong>S = 1, R = 0:</strong> Sets Q to 1.</li>
+        <li><strong>S = 0, R = 1:</strong> Resets Q to 0.</li>
+        <li><strong>S = 0, R = 0:</strong> Holds the current state.</li>
+        <li><strong>S = 1, R = 1:</strong> Undefined behavior (Q and Q' both being 1 is impossible).</li>
+    </ul>
+    
+    <p>Here’s a typical SR latch circuit and its truth table:</p>
+    <img src="img/u6c1-4.webp" alt="SR Latch Circuit and Truth Table" class="inlinepic-med">
+    
+    <h3>Gated SR Latches</h3>
+    <p>What if we wanted to control when the latch updates its memory? By adding two <strong class="code">AND</strong> gates alongside the set and reset signals, we introduce an <strong>enable</strong> signal. This lets us choose when the latch updates:</p>
+    
+    <ul>
+        <li><strong>Enable = 1:</strong> Latch works as normal (Set and Reset respond).</li>
+        <li><strong>Enable = 0:</strong> Output holds the previous state, ignoring Set and Reset.</li>
+    </ul>
+    
+    <img src="img/u6c1-5.webp" alt="Gated SR Latch Diagram" class="inlinepic-med">
+    
+    <h3>D Latches</h3>
+    <p>A D latch simplifies the gated SR latch by combining the Set and Reset inputs into one data input (D). It prevents invalid states by ensuring S and R are always opposites internally.</p>
+    
+    <ul>
+        <li><strong>When E = 0 (Latch Mode):</strong> The output (<strong>Q</strong>) remains unchanged, holding the last stored value.</li>
+        <li><strong>When E = 1 (Transparent Mode):</strong> The output follows the input (<strong>Q = D</strong>), meaning <strong>Q</strong> updates directly based on <strong>D</strong>.</li>
+        <li>The <strong>complement output</strong> (<span style="text-decoration: overline;">Q</span>) is always the opposite of <strong>Q</strong>, ensuring only one of them is high at a time.</li>
+    </ul>
+    <p>
+        This behavior makes the <strong>D-latch</strong> useful for temporary data storage in registers and memory elements.
+    </p>
+
+    <img src="img/u6c1-2.webp" alt="d-latch diagram" class="inlinepic-med">
+        
+    <h3>Everything is <strong class="code">NAND</strong></h3>
+    <p>Fun fact: every latch we’ve covered — SR, Gated SR, and D latches — has a NAND gate equivalent! Can you figure out how to build them? They behave similarly but use NAND gates instead of NOR gates.</p>
+    
+    <p><strong>Note:</strong> For this class, we won’t cover JK or T latches — but feel free to explore those on your own!</p>
+
+
+    <h3>D Flip-Flops</h3>
+        <p>D Flip-Flops build on D latches by introducing a clock pulse, ensuring the output only updates on a rising or falling edge of the clock signal.</p>
+        <p>Let's break this down:</p>
+        <ul>
+            <li><strong>1's and 0's:</strong> Represented as high and low voltage states respectively.</li>
+            <li><strong>Pulses:</strong> Short-duration current signals that transition between high and low states.</li>
+            <li><strong>Clock pulses:</strong> These special pulses synchronize CPU components. They transition from low-to-high-to-low (rising edge) or high-to-low-to-high (falling edge).</li>
+            <li><strong>Minecraft comparison:</strong> Think of pulses as redstone ticks or pulse generators. You'll see these when we trigger a write signal!</li>
+        </ul>
+        <p>D Flip-Flops are ideal for CPU registers because they only update precisely when the clock pulse triggers — ensuring reliable, synchronized data flow. The below is an example of a <strong>2 tick pulse</strong>, that triggers when the button is pressed. We will talk more about pulses and clocks in the program counters section of this textbook.</p>
+
+        <img src="img/u6c1-3.webp" alt="d flip-flops" class="inlinepic">
+
+        <iframe src="https://circuitverse.org/simulator/embed/d-flipflop-e5a0783d-94aa-4f62-a1ff-69c9cd4eab8b?theme=&display_title=false&clock_time=true&fullscreen=true&zoom_in_out=true" style="border-width:; border-style: ; border-color:;" name="myiframe" id="projectPreview" scrolling="no" frameborder="1" marginheight="0px" marginwidth="0px" height="500" width="500" allowFullScreen></iframe>
+
+        <h3>In Minecraft</h3>
+        <p>
+            The beauty of Minecraft is that they gave us a mechanism for storing memory. Although there are many different practices, we primarily rely on the data-latch or d-latch. A d-latch is a simple way to hold data in place. You can construct one with two repeaters, where one repeater "locks" the other one. When the repeater lock is established, any input data will not affect what is stored in memory. When the repeater lock is released, the data slot can be updated at will. You can think of this as choosing when or when to not hit save on a file.
+        </p>
+        <p>Here is an example of a <strong>d-latch</strong> in three different setups. Try it yourself.</p>
+
+        <img src="img/u6c1-1.png" alt="D-latch" class="inlinepic-big">
+
+
+        <div class="pagearrows">
+            <a href="u6.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+            <a href="u6c2.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+        </div>
+
+    </div>
+</body>

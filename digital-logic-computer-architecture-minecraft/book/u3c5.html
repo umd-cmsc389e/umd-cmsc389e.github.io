@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+      <h1>Encoders</h1>
+
+      <p>Encoders are basically just decoders, but backwards.</p>
+
+      <p>First things first, ensure that you're familiar with decoders before attacking this chapter. We're assuming that you're familiar with the idea that <em>binary</em> decoders take in <em>n</em> wires and produce an output on one of <em>2<sup>n</sup></em> wires.</p>
+
+      <h3>A Complementary Example</h3>
+
+      <p>Think of encoders as a complement to decoders. Suppose we had 8 input wires, each signifying the decimal numbers from 0 to 8.</p>
+
+      <p>Our goal here would be to figure out which wire was on, and then signal the right binary bits to the output.</p>
+
+      <p>You'll find that this is done in a highly similar fashion to our decoder. First things first- let's come up with a truth table.</p>
+
+      <p>As you can imagine, if we have the truth table for a decoder, we can just as easily come up with a truth table for an encoder. We will be using 3 bits for this example, as we did previously.</p>
+
+      <img src="img/u3c4-1.png" alt="" class="inlinepic-big">
+
+      <em>In the above diagram, the columns labelled 'D' represent decimal inputs, while the columns labelled 'A', 'B', and 'C' represent the binary output wires.</em>
+
+      <p>Given this information, we can produce a logical circuit. You'll find a few key similarities between this circuit and the decoder circuit, cementing the idea that they certainly go hand in hand.</p>
+
+      <p>In a loose sense, you may even want to consider them 'complements' of one another, as one undoes the operation of another, and vice versa.</p>
+
+      <p>Here is the logical circuit, using the same labels as given in the truth table above.</p>
+
+      <img src="img/u3c4-2.png" alt="" class="inlinepic-big">
+
+      <h3>Generalization</h3>
+
+      <p>Basically everything listed in the previous section about decoders is true here, but backwards. </p>
+
+      <p>With binary encoders, you're simply taking <em>2<sup>n</sup></em> input wires, and condensing them down into <em>n</em> wires of output.</p>
+
+      <p>It also goes without saying that encoders can be used with any number systems, not just the ones we've mentioned here. Again, that would be outside of the scope of this class, so we'll skip that information here. As always, the internet is at your disposal, so feel free to comb it for further information if you wish!</p>
+
+      <div class="pagearrows">
+        <a href="u3c4.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u3c6.html" class="text-primary"><div class="forward">forward <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>

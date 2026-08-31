@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+    <h1>Register File</h1>
+    <hr/>
+    <p>
+      Ok great! We can perform our operations, but rather than just manually setting inputs and discarding outputs, how do we save them in memory? 
+      The register file is the name for the construct holding data for each register. The number of registers, as well as their number of bits, can vary, 
+      but Minecraft tends to work well with 8-bit registers in terms of compact builds. 
+      We primarily will use 16, 8-bit registers (<code>r0</code> … <code>r15</code>), which means we need four bits for a register file decoder (<code>2^4 = 16</code>).
+    </p>
+
+    <img src="img/u6-1.png" alt="diagram" class="inlinepic">
+
+    <p>After you have read this entire module, the above diagram will start to make sense. It is essentially a dual-read register, 
+      capable of reading two input registers,<code>R0</code> and <code>R1</code>, along with a write register, <code>W</code>, and
+      some data to write to that write register. The outputs are reading those two registers. This visual is accredited to
+      <a href="https://www.youtube.com/@mattbatwings">matbatwings</a>; it helps you understand conceptually how memory is stored.
+      Don't worry about the clock and enable input signals for now.
+    </p>
+  
+    <div class="disclaimer">
+      <h3>Disclaimer</h3>
+      <p>
+        Although this component is separate from all previous components, it is highly recommended that you know all prior architectural pieces 
+        before integrating your register file into your CPU.
+      </p>
+    </div>
+
+      <div class="pagearrows">
+        <a href="u5c1.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u6c1.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+      <h1>Mods</h1>
+      <p>This section details the mods added to the course as well as how to use them.</p>
+      <hr>
+      <p>
+        Most of the mods we had you install were quality-of-life or performance-enhancing mods. However, two of them, 
+        <strong>Carpet mod</strong> and <strong>WorldEdit</strong>, will be quite useful for your projects.
+      </p>
+      
+      <h2>Carpet</h2>
+      <p>
+        <strong>Carpet mod</strong> essentially allows you to take complete control over how your game runs. Some useful commands are the following:
+      </p>
+      <ul>
+        <li>
+          <code>/carpet setDefault creativeNoClip true</code>: Allows you to fly through blocks, which is <em>SUPER</em> useful for building large, complex redstone circuits. 
+          I would enter this command immediately upon creating a new world.
+        </li>
+        <li>
+          <code>/tick rate [number]</code>: Allows you to change the tick rate/speed at which your game runs. Useful for testing circuits that take a while to run.
+        </li>
+        <li>
+          <code>/tick freeze</code> and <code>/tick step [number]</code>: Useful for debugging your redstone circuits 
+          (yes, we even have a debugger in <em>Minecraft</em>).
+        </li>
+        <li>
+          <code>/carpet creativeFlySpeed [number]</code>: Allows you to adjust your creative flight speed.
+        </li>
+      </ul>
+      
+      <h2>WorldEdit</h2>
+      <p>
+        <strong>WorldEdit</strong> allows you to build a LOT faster and saves a lot of pain (from experience). Some useful commands are:
+      </p>
+      <ul>
+        <li>
+          <code>//wand</code>: Gives you a wand for area selection with left and right click.
+        </li>
+        <li>
+          <code>//copy</code>: Copies the selected area, relative to your position.
+        </li>
+        <li>
+          <code>//paste</code>: Pastes whatever is in your clipboard.
+        </li>
+        <li>
+          <code>//set [block]</code>: Fills the selected area with the specified block. If <code>[block]</code> is air, it removes all blocks in the area.
+        </li>
+        <li>
+          <code>//stack [direction] [number]</code>: Stacks the selected area relative to the direction you are facing. 
+          <code>[direction]</code> can be <em>up, down, back, left, right, forward</em> for as many <code>[number]</code> times as you want. 
+          This is <em>SUPER</em> useful.
+          <ul>
+            <li>
+              A subnote is that stack also can be used as the following <code>//stack [number] [offset_x,offset_y,offset_z]</code>
+            </li>
+            <li>This is really handy for specifying spacing, precise direction, and staircasing builds. Note the offsets can also
+              be negative integers. The second argument would just be a three-integer tuple, 
+              
+            </li>
+            <li><em>ex. //stack 7 1,0,0</em>: stack a build 7 times in the positive x direction with offset 1</li>
+          </ul>
+        </li>
+        <li>
+          <code>//undo</code> and <code>//redo</code>: Self-explanatory.
+        </li>
+        <li>
+          <code>//flip</code>: Flips your clipboard based on the direction you are facing.
+        </li>
+        <li>
+          <code>//rotate</code>: Rotates the content of your clipboard.
+        </li>
+        <li>
+          <code>//schem save [name]</code>: Saves a copied region as a schema file.
+        </li>
+        <li>
+          <code>//schem load [name]</code>: Loads a build you previously saved into a world.
+        </li>
+      </ul>
+      
+      <p>
+        I would get super familiar with using these commands, as they might be useful to you in your projects! :)
+      </p>
+      
+      <p>
+        If you have any questions, feel free to ask them in the <strong>#questions</strong> channel of the Discord, send me a Discord DM, email me, 
+        or contact me however you see fit!
+      </p>      
+
+      <p>For more on WorldEdit commands, check out there <a href="https://worldedit.enginehub.org/en/latest/commands/">official documentation</a>! (It's not super in-depth, but it helps)</p>
+
+      <div class="pagearrows">
+        <a href="u1c3.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u2.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+    </div>
+
+</body>

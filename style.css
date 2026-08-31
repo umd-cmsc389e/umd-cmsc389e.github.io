@@ -1,0 +1,70 @@
+@import url("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700|Work+Sans:300,400,600,700&display=swap");
+* {
+  font-family: "Work Sans";
+}
+
+h1.hero {
+  font-weight: 300;
+  color: #218c74;
+}
+
+ul.reading {
+  padding: 16px;
+}
+
+h2.hero {
+  color: #218c74;
+}
+
+img.header {
+  margin-top: 32px;
+  width: 100%;
+}
+
+.bg-mc {
+  background-color: #218c74;
+}
+
+.table-bordered > tbody > tr > td,
+.table-bordered > tbody > tr > th,
+.table-bordered > tfoot > tr > td,
+.table-bordered > tfoot > tr > th,
+.table-bordered > thead > tr > td,
+.table-bordered > thead > tr > th {
+  border: 1px solid white;
+}
+
+a.link {
+  border: 2px solid green;
+  border-radius: 2px;
+  font-weight: light;
+  width: auto;
+  font-size: 14px;
+  color: green;
+  padding-left: 2px;
+  padding-right: 2px;
+  white-space: nowrap;
+}
+
+a.link:visited {
+  color: green;
+}
+
+a.link:hover {
+  color: white;
+  text-decoration: none;
+  background-color: green;
+}
+
+footer {
+  font-size: 10px;
+  text-align: center;
+}
+
+/* detecting mobile */
+
+@media (pointer: none), (pointer: coarse) {
+  table {
+    font-size: 8px;
+  }
+}

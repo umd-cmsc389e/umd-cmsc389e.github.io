@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+  
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+  
+    <title>Digital Logic Design &amp; Minecraft</title>
+  
+    <!-- Bootstrap core CSS -->
+    <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+    </style>
+  </head>
+<body>
+    <div class="container container-large">
+        <h1>Subtractors</h1>
+        <p>
+            Before you read this section, make sure you are comfortable with adders. Subtraction, after all, 
+            can be modeled as addition. Observe that, 5 - 2 is equivalent to 5 + (-2).
+        </p>
+        <h3>How Do We Represent Negative Numbers?</h3>
+        <p>
+            We would need an extra bit of information to convey parity. So, 0 for positive and 1 for negative.
+        </p>
+        <p>
+            Ok great, now what? Say we use three bits of information and one leading bit for parity: 
+            <code>0101</code> is 5 and <code>1010</code> represents -2. Using a regular adder would yield 
+            <code>1111</code>. Hm, not quite right.
+        </p>
+        <p>
+            Observe that although -2 represented as <code>1010</code> does not yield the right result, adding 
+            16 to this representation (so adding 14 instead) does, and this produces an overflow carry we disregard:
+        </p>
+        <pre>
+                                    0101
+                                    1110
+                                    ----
+                                   10011
+        </pre>
+        <p>
+            The two values are synonymous due to modular arithmetic, where we take <code>2^(number of bits) - (value)</code> 
+            to be added instead. So for -2, this could be 14, 30, 46,…, etc., but we choose 14 since we can only represent 
+            that given our number of bits.
+        </p>
+        <p><code>16 = 2 (mod 14)</code></p>
+        <p>
+            Think about modular arithmetic like a clock; -2 can be thought of as -2 o'clock or 10 o'clock. 10 o'clock is 
+            more useful for us. This is called <strong>two's complement</strong>. We can flip all the bits and add 1 
+            (<code>15 - X + 1</code>), which is equivalent to <code>(16 - X)</code> or the modulus. Note that this can be 
+            extended to 5 bits (32) and so forth.
+        </p>
+        <img src="img/u3c3-3.jpg" alt="" class="inlinepic">
+        <p>
+            So 2 is <code>0010</code>, but if we do <code>15 - 2</code>, (or observe that this operation flips all bits), 
+            we get <code>1101</code>. If we add 1, we get <code>1110</code>, which is what we listed above. Going from a negative digit to a positive digit entails the same process.
+        </p>
+        <p>
+            In Minecraft, all you would need to do is negate and add one to a specific input. Here is a digital logic circuit diagram that manipulates an 8-bit adder to be used as a subtractor.
+        </p>
+
+        <img src="img/u3c7-1.png" alt="subtractor diagram" class="inlinepic-big">
+
+
+
+        <h3>An aside</h3>
+
+        <p>
+            There are multiple ways to build a subtractor, as there is to build an adder. 
+            Similar to adders, subtractors can be modeled with half-subtractor and full-subtractor circuits
+            that track differences and borrows instead of sums and carries. Feel free to look it up!
+        </p>
+    </div>
+
+    <div class="pagearrows">
+        <a href="u3c6.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u5.html" class="text-primary"><div class="forward">forward <i class="fas fa-chevron-right"></i></div></a>
+    </div>
+</body>
+</html>

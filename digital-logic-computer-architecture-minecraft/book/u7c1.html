@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+        <h1>How It Works</h1>
+        <hr/>
+        <h3>Number of Addresses</h3>
+        <p>
+            We want to be able to come up with some memory device to keep hold of all the instructions. 
+            The big question is: how many instructions should we have?
+        </p>
+        <p>
+            Note that we can use a decoder to pick an address from binary. However, the number of instructions grows 
+            exponentially (2<sup>n</sup>). For ease of use, we decide to conduct this class with 2<sup>8</sup> (256) 
+            different instructions. So now we need to build an 8-bit decoder.
+        </p>
+        <p>
+            Please pay attention to the difference between <strong>instruction address</strong> and the <strong>instruction</strong> itself. 
+            The instruction address refers to the location of the instruction in our memory, while the instruction is the 0s and 1s 
+            needed to set all the inputs correctly for our control ROM. The decoder we are making is to select a specific address 
+            (e.g., 00000001). That address then provides us some instruction.
+        </p>
+        <img src="img/u7c1-1.png" alt="memory_diagram" class="inlinepic-big">
+        <h3>Design</h3>
+        <p>
+            There are numerous designs for an 8-bit decoder. You can build a decoder in one direction.
+        </p>
+
+        <img src="img/u7c1-2.png" alt="long decoder" class="inlinepic-big">
+
+        <p>
+            However, the more bits, the longer it takes for the signal to propagate due to repeaters. There are many designs that can 
+            be used, but we will provide you a schema for an efficient one. If you would like to dig deeper on how it works, you can 
+            visit <a target="_blank" href="https://www.youtube.com/watch?v=wAwMQp0KNMI"><strong>this video</strong></a> or ask one of us. Essentially, if all instructions are laid out in a grid, you can optimize your search 
+            based on the multiple of the decimal conversion of an instruction address 
+            (e.g., One row may contain addresses that are multiples of 8 bits).
+        </p>
+        
+        <img src="img/u7c1-3.png" alt="efficient decoder" class="inlinepic-big">
+
+        <p>
+            Note that when you select a specific address of an instruction, that signal can be used in conjunction with a glass tower 
+            to carefully craft a specific <strong>INSTRUCTION</strong>. The following is an example of setting one instruction at 
+            address 0. The Redstone lamps indicate a 0 (off) or 1 (on). In our schematic we provide you, those signals will then 
+            be sent to some central output, from which you can wire from (not pictured).
+        </p>
+
+        <img src="img/u7c1-6.png" alt="efficient decoder" class="inlinepic-big">
+
+        <h3>Wiring</h3>
+        <p>
+            Once you have created your instruction memory, all you need to do is wire parts of instructions to the correct inputs. 
+            For example, the first four bits in our language are the opcode. So those Redstone signals would need to be sent in order 
+            to the control ROM. Wiring can be really tedious, but it should honestly be the easiest to conceptually understand. 
+            It is like performing some operation, and all you are doing is setting the inputs correctly. 
+            Please refer to the Redstone chapter if you need help wiring.
+        </p>
+
+        <img src="img/u7c1-5.png" alt="long decoder" class="inlinepic-big">
+
+      <div class="pagearrows">
+        <a href="u7.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u7c2.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>

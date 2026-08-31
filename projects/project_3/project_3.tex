@@ -1,0 +1,584 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[labels]{enumitem}
+\usepackage{tikz}
+\usepackage{alltt}
+\usepackage{tcolorbox}
+\usepackage{indentfirst}
+\usepackage[top = 1in, left = 1 in, right = 1 in, bottom = 1in]{geometry}
+\usepackage{sectsty}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{circuitikz}
+\usepackage{float}
+\usepackage{circuitikz}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\setlist{  
+  listparindent=\parindent,
+  parsep=1em
+}
+\hypersetup{
+    colorline4,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\sectionfont{\fontsize{17}{15}\selectfont}
+\setlength{\parskip}{1em}
+
+\setlength{\parindent}{1cm}
+
+\newcommand{\createtitle}[4]{
+    {\Huge #1} \hfill  #2 \\
+    
+    \begin{tabular}{rl}
+        \textbf{Assigned: } & #3 \\
+        \textbf{Due: } & #4
+    \end{tabular}
+    \vspace{.75 in}}
+
+\newcommand{\mysubsection}[1]{
+    {\fontsize{13}{15}\selectfont\bf \item #1}}
+    
+\newenvironment{subenv}[2]
+{\section{#1}\vspace{.5em}#2\\\begin{enumerate}}
+{\end{enumerate}}
+
+\newcommand{\varin}[1]{\textcolor{red}{\texttt{#1}}}
+\newcommand{\varout}[1]{\textcolor{blue}{\texttt{#1}}}
+
+\newcommand{\myinput}{\varin{input }}
+\newcommand{\myoutput}{\varout{output }}
+
+\newcommand{\image}[2]{
+\begin{figure}[H]\begin{center}
+    \includegraphics[width=#2\linewidth]{#1}
+\end{center}\end{figure}}
+
+\newcommand{\tbd}{\textbf{TBD}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Akilesh Praveen}
+\fancyhead[RE,LO]{CMSC389E}
+
+\begin{document}
+
+\large
+
+{\fontfamily{lmdh}\selectfont{\Huge CMSC389E Project 3: \par Finishing the ALU}}
+
+Assigned \textbf{Friday February 25}
+
+Due \textbf{Thursday March 17}
+
+\section{\fontfamily{lmdh}\selectfont{Looking More like a Computer Every Day}}
+
+Now, we want to look at finishing up our ALU and making sure that all the components are connected properly. 
+Also, we want to add the key functionality that'll allow us to request the operation we want from the ALU and have it spit out the correct result.
+
+Our main focus will be in the implementing the operation selection, which we will do using a \textbf{encoder/decoder} setup.
+
+This is a great way to introduce us to the practical uses of the encoders and decoders that we covered more theoretically in class, as we are now \textbf{selecting an operation} based on a given opcode.
+
+Obviously, the implementation here is going to be a little divergent from the exact implementation that we covered in class, but by applying the concepts that we covered in class, you should be all set for success on this project.
+
+At the end of it, you'll have implemented a perfectly functional opcode-based setup where you can input the operation you want, and the input parameters, and then receive the output! 
+
+\section{\fontfamily{lmdh}\selectfont{Conceptual Overview: Encoding/Decoding}}
+
+You will need a way to specify for your ALU which operation that you'd actually like to perform. There are a few ways to do this reliably, but the best way would most probably be to go forward with a concept from class. 
+Luckily, the Encoder/Decoder family of circuits is incredibly fit for the task.
+
+In this instance, you'll simply be taking in an input in the form of a 4-bit binary opcode number, and translating it to a decimal output (choosing one of the 9 operations that we have specified).
+Hopefully, this language should remind you of the encoder and decoder lesson from class.
+
+\section{\fontfamily{lmdh}\selectfont{Setup}}
+
+Our first order of business will be to add a few more functionalities to the ALU. Specifically, now that we've done the tough stuff and built out the architecture for those tougher operations, we want to add a few more easier operations as well.
+We selected these operations specifically because they are very common in most assembly languages, and we think you'll find them useful for emulating computing circuits in the following projects. 
+
+We will start by loading the appropriate blocks for the first part of this project.  
+
+\begin{tcolorbox}
+  \texttt{/test load 4}
+\end{tcolorbox}
+
+You will see that in doing this, you have the same input blocks as provided in the previous projects.
+Additionally, you will be given \varin{oCntrl0}, \varin{oCntrl1}, \varin{oCntrl2} and \varin{oCntrl3}.
+You will use these as the inputs for your encoder for your opcodes. 
+In terms of outputs, you will have only one clean set of outputs now: \varout{oOut0}, \varout{oOut1}, and \varout{oOut2}.
+You will connect these to the end of your output bus so that they will capture the appropriate 3-bit output of any of your input functions.
+
+\section{\fontfamily{lmdh}\selectfont{Adding a Few More Functions}}
+
+First and foremost, we want to add just a few more functions to our ALU, as follows. These are all pretty simple, but one of these steps involves taking our adder that we created previously and expanding upon it so that it can also function as a full subtractor. This will be explained in the section below.
+
+\subsection{\fontfamily{lmdh}\selectfont{Bitshift Left}}
+
+This one is pretty simple. Take the \varin{a} input bus and return the logical shift left of it. The low bit (0) should remain off.
+
+\subsection{\fontfamily{lmdh}\selectfont{Bitshift Right}}
+
+This one is the same. take the \varin{a} input bus and return the logical shift right of it. The high bit (2) should remain off.
+
+\subsection{\fontfamily{lmdh}\selectfont{Subtraction}}
+
+Here's the cool part- you can turn the adder that you have into a functional subtractor just by changing it slightly. We'll touch more upon this in the section below on converting your adder into a functional subtractor. 
+
+For now, all you need to know is this- just as you have implemented the addition operation, you now have to implement the subtraction operation as well.
+
+You will want to return the result of \varin{a} \texttt{-} \varin{b}.
+
+\subsection{\fontfamily{lmdh}\selectfont{Set if Less Than (SLT)}}
+
+Recognize this from assembly code? 
+You'll find this neat little conditional useful as well.
+We want an easy way to implement this. I would recommend that you first work out the details of your subtractor, after which this should be a piece of cake.
+
+Run the inputs through the subtractor circuit as you would for a subtraction operation, but then at the end, have a flag that catches if the result of the subtraction was negative or not.
+
+Essentially, we will want to return \texttt{1} if \varin{a} \texttt{-} \varin{b} \texttt{< 0}. Else, we will return \texttt{0}. 
+
+\section{\fontfamily{lmdh}\selectfont{We Giveth (Adder) and We Taketh Away (Subtractor)}}
+
+The bitshift implementations should take you a few minutes at most.
+They should not be more complicated than just you shifting some of the input wires to each side (appropriately).
+Now, we will want to work on turning out adder circuit into an adder/subtractor.
+
+Luckily, we can take care of this pretty easily.
+That is, we can take our circuit that \textbf{only} does adding right now in three bits, and make some adjustments to it so that it can add \textbf{or} subtract, based on an input flag (which we will affectionately refer to as the \textit{control wire}).
+
+First things first, let's explain how this works. Currently, your circuit for adding should look a little something like this:
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Straight Lines [id:da7381635994363456] 
+\draw    (132,58) -- (132,220.17) ;
+%Straight Lines [id:da7848514350155817] 
+\draw    (150,58) -- (150,220.17) ;
+%Straight Lines [id:da8302964863935134] 
+\draw    (170,58) -- (170,220.17) ;
+%Straight Lines [id:da34955037883800877] 
+\draw    (223.33,58.67) -- (223.33,220.83) ;
+%Straight Lines [id:da6786658733704694] 
+\draw    (241.33,58.67) -- (241.33,220.83) ;
+%Straight Lines [id:da12919865074668824] 
+\draw    (261.33,58.67) -- (261.33,220.83) ;
+%Straight Lines [id:da7305483279108875] 
+\draw    (132,71) -- (374.33,71) ;
+\draw [shift={(132,71)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da5465669365377519] 
+\draw    (224,87.67) -- (374.33,87.67) ;
+\draw [shift={(224,87.67)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8071636079717495] 
+\draw    (149.83,126) -- (374.83,126) ;
+\draw [shift={(149.83,126)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da4793307324782463] 
+\draw    (241.5,142.56) -- (374.83,142.56) ;
+\draw [shift={(241.5,142.56)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da7597363793894083] 
+\draw    (170.17,183.5) -- (373.83,183.5) ;
+\draw [shift={(170.17,183.5)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da12533768391816502] 
+\draw    (261.33,199.94) -- (373.83,199.94) ;
+\draw [shift={(261.33,199.94)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: Rectangle [id:dp4805727559899592] 
+\draw   (374.33,62) -- (445,62) -- (445,96.25) -- (374.33,96.25) -- cycle ;
+%Shape: Rectangle [id:dp3337169468789084] 
+\draw   (374.33,117.5) -- (445,117.5) -- (445,151.75) -- (374.33,151.75) -- cycle ;
+%Shape: Rectangle [id:dp9371224283048248] 
+\draw   (374.33,173.5) -- (445,173.5) -- (445,207.75) -- (374.33,207.75) -- cycle ;
+%Straight Lines [id:da957771323513043] 
+\draw    (409.67,30.75) -- (409.67,60.25) ;
+\draw [shift={(409.67,62.25)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da08363994560912236] 
+\draw    (409.67,96.25) -- (409.67,115.25) ;
+\draw [shift={(409.67,117.25)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6635965831798994] 
+\draw    (409.67,152.58) -- (409.67,171.58) ;
+\draw [shift={(409.67,173.58)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da008651621753931305] 
+\draw    (409.67,207.42) -- (409.67,236.92) ;
+\draw [shift={(409.67,238.92)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da2260056775229814] 
+\draw    (446,137.22) -- (477,137.22) ;
+\draw [shift={(479,137.22)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da5168216629641919] 
+\draw    (446.33,191.22) -- (477.33,191.22) ;
+\draw [shift={(479.33,191.22)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da21024475266476683] 
+\draw    (446,79) -- (477,79) ;
+\draw [shift={(479,79)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+
+% Text Node
+\draw (119,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA0}}};
+% Text Node
+\draw (140.33,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA1}}};
+% Text Node
+\draw (161,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA2}}};
+% Text Node
+\draw (211.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB0}}};
+% Text Node
+\draw (233,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB1}}};
+% Text Node
+\draw (253.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB2}}};
+% Text Node
+\draw (481.5,68.67) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAdder0}}};
+% Text Node
+\draw (483.17,126.22) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAdder1}}};
+% Text Node
+\draw (482.83,180.39) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAdder2}}};
+% Text Node
+\draw (380.17,70.67) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (380.17,127.33) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (380.17,183) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (387.17,242.92) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAdder3}}};
+
+\end{tikzpicture}
+
+I have taken the liberty to include your old output blocks in the above diagram, just to remain consistent with what your design should look like right now.
+You now have two tasks.
+First, retrofit your adder setup with some changes so that it can successfully subtract as well.
+Second, instead of connecting your outputs to specific output blocks, send them all to an output bus.
+
+In order to allow us to intelligently invert inputs and outputs when we need to facilitate complement operations, we will be augmenting our circuit as such.
+This will give us the ability to subtract numbers, as well as add numbers- all based on the control wire.
+
+The diagram below shows you how your adder/subtractor circuit should be now- after we have made the improvements discussed above.
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Straight Lines [id:da7381635994363456] 
+\draw    (132,58) -- (132,220.17) ;
+%Straight Lines [id:da7848514350155817] 
+\draw    (150,58) -- (150,220.17) ;
+%Straight Lines [id:da8302964863935134] 
+\draw    (170,58) -- (170,220.17) ;
+%Straight Lines [id:da34955037883800877] 
+\draw    (223.33,58.67) -- (223.33,220.83) ;
+%Straight Lines [id:da6786658733704694] 
+\draw    (241.33,58.67) -- (241.33,220.83) ;
+%Straight Lines [id:da12919865074668824] 
+\draw    (261.33,58.67) -- (261.33,220.83) ;
+%Straight Lines [id:da7305483279108875] 
+\draw    (132,71) -- (374.33,71) ;
+\draw [shift={(132,71)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da5465669365377519] 
+\draw    (224,87.67) -- (353,87) ;
+\draw [shift={(224,87.67)}, rotate = 359.7] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8071636079717495] 
+\draw    (149.83,126) -- (374.83,126) ;
+\draw [shift={(149.83,126)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da4793307324782463] 
+\draw    (241.5,142.56) -- (354.14,142.43) ;
+\draw [shift={(241.5,142.56)}, rotate = 359.94] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da7597363793894083] 
+\draw    (170.17,183.5) -- (373.83,183.5) ;
+\draw [shift={(170.17,183.5)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da12533768391816502] 
+\draw    (261.33,199.94) -- (351.57,200.14) ;
+\draw [shift={(261.33,199.94)}, rotate = 0.13] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: Rectangle [id:dp4805727559899592] 
+\draw   (374.33,62) -- (445,62) -- (445,96.25) -- (374.33,96.25) -- cycle ;
+%Shape: Rectangle [id:dp3337169468789084] 
+\draw   (374.33,117.5) -- (445,117.5) -- (445,151.75) -- (374.33,151.75) -- cycle ;
+%Shape: Rectangle [id:dp9371224283048248] 
+\draw   (374.33,173.5) -- (445,173.5) -- (445,207.75) -- (374.33,207.75) -- cycle ;
+%Straight Lines [id:da957771323513043] 
+\draw    (409.67,30.75) -- (409.67,60.25) ;
+\draw [shift={(409.67,62.25)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da08363994560912236] 
+\draw    (409.67,96.25) -- (409.67,115.25) ;
+\draw [shift={(409.67,117.25)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6635965831798994] 
+\draw    (409.67,152.58) -- (409.67,171.58) ;
+\draw [shift={(409.67,173.58)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da008651621753931305] 
+\draw    (409.67,207.42) -- (409.67,236.92) ;
+\draw [shift={(409.67,238.92)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da2260056775229814] 
+\draw    (446,137.22) -- (477,137.22) ;
+\draw [shift={(479,137.22)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da5168216629641919] 
+\draw    (446.33,191.22) -- (477.33,191.22) ;
+\draw [shift={(479.33,191.22)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da21024475266476683] 
+\draw    (446,79) -- (477,79) ;
+\draw [shift={(479,79)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da1391673887470638] 
+\draw [color={rgb, 255:red, 189; green, 16; blue, 224 }  ,draw opacity=1 ]   (340.43,20.71) -- (340.14,211.29) ;
+%Shape: Xor Gate [id:dp5897969776587705] 
+\draw   (351.73,84.22) -- (358.07,84.22) .. controls (362.48,84.37) and (366.43,87.62) .. (368.2,92.56) .. controls (366.43,97.49) and (362.48,100.74) .. (358.07,100.89) -- (351.73,100.89) .. controls (354.45,95.73) and (354.45,89.38) .. (351.73,84.22) -- cycle (347.93,87) -- (353,87) (347.93,98.11) -- (353,98.11) (368.2,92.56) -- (373.27,92.56) (350.47,84.22) .. controls (353.18,89.38) and (353.18,95.73) .. (350.47,100.89) ;
+%Shape: Xor Gate [id:dp2080935460710639] 
+\draw   (352.88,139.65) -- (359.21,139.65) .. controls (363.63,139.8) and (367.58,143.05) .. (369.34,147.98) .. controls (367.58,152.92) and (363.63,156.17) .. (359.21,156.32) -- (352.88,156.32) .. controls (355.59,151.16) and (355.59,144.81) .. (352.88,139.65) -- cycle (349.08,142.43) -- (354.14,142.43) (349.08,153.54) -- (354.14,153.54) (369.34,147.98) -- (374.41,147.98) (351.61,139.65) .. controls (354.32,144.81) and (354.32,151.16) .. (351.61,156.32) ;
+%Shape: Xor Gate [id:dp028021258005219485] 
+\draw   (353.45,197.37) -- (359.78,197.37) .. controls (364.2,197.51) and (368.15,200.76) .. (369.91,205.7) .. controls (368.15,210.63) and (364.2,213.88) .. (359.78,214.03) -- (353.45,214.03) .. controls (356.16,208.88) and (356.16,202.52) .. (353.45,197.37) -- cycle (349.65,200.14) -- (354.71,200.14) (349.65,211.25) -- (354.71,211.25) (369.91,205.7) -- (374.98,205.7) (352.18,197.37) .. controls (354.9,202.52) and (354.9,208.88) .. (352.18,214.03) ;
+%Straight Lines [id:da48023006696201265] 
+\draw [color={rgb, 255:red, 189; green, 16; blue, 224 }  ,draw opacity=1 ]   (339.86,98.14) -- (347.93,98.11) ;
+%Straight Lines [id:da4537797122149977] 
+\draw [color={rgb, 255:red, 189; green, 16; blue, 224 }  ,draw opacity=1 ]   (341,153.57) -- (349.08,153.54) ;
+%Straight Lines [id:da9472862753454586] 
+\draw [color={rgb, 255:red, 189; green, 16; blue, 224 }  ,draw opacity=1 ]   (340.14,211.29) -- (349.65,211.25) ;
+%Straight Lines [id:da6330187590777822] 
+\draw [color={rgb, 255:red, 189; green, 16; blue, 224 }  ,draw opacity=1 ]   (340.43,30.14) -- (409.67,30.75) ;
+
+% Text Node
+\draw (119,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA0}}};
+% Text Node
+\draw (140.33,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA1}}};
+% Text Node
+\draw (161,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA2}}};
+% Text Node
+\draw (211.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB0}}};
+% Text Node
+\draw (233,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB1}}};
+% Text Node
+\draw (253.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB2}}};
+% Text Node
+\draw (380.17,70.67) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (380.17,127.33) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (380.17,183) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (289,3) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\fontfamily{pcr}\selectfont \textcolor[rgb]{0.74,0.06,0.88}{{\small Control Wire}}}};
+% Text Node
+\draw (513.33,83.5) node [anchor=north west][inner sep=0.75pt]  [rotate=-90] [align=left] {{\fontfamily{pcr}\selectfont To Output Bus}};
+
+
+\end{tikzpicture}
+
+You will see in the diagram above that we have made a few changes. 
+First of all, we've added a 'control wire' to the diagram.
+When the control wire is set to \texttt{0}, the circuit remains an adder, as it has been before.
+We leave the truth table for this as an exercise for the reader, so that they may see that they are the same. 
+When the control wire is set to \texttt{1}, the circuit becomes a subtractor. We recommend that the reader give this a few tries on paper first, before attempting to implement this in Minecraft. 
+
+This is our recommended solution, but there is more than one way to turn an adder into a subtractor. 
+If you come up with a solution that you think is more convenient to implement, may work more efficiently, or is just plain cooler looking, please feel free to implement it!
+As long as it passes the tests, it's good by us.
+
+This setup is valuable to us because we can quite easily just determine when to activate and deactivate the control wire in order to get the outputs that we want.
+This also makes implementing SLT quite simple. 
+We recommend that you test all of your individual functions before moving onto the next portion of the project, just to ensure that you have no issues that are caused by errors in operations.
+
+\section{\fontfamily{lmdh}\selectfont{The Opcode Controller}}
+
+Now, we're going to use our magical decoder powers to turn this thing into a real arithmetic logic unit.
+That is, we're going to accept a \textbf{4 bit binary number} as an opcode, and appropriately determine the right ALU function to perform upon \varin{iA0}, \varin{iA1}, \varin{iA2} and \varin{iB0}, \varin{iB1}, and \varin{iB2}.
+
+We will accomplish this using a decoder. Following are the inputs that we are expecting, and the functions that they select for. 
+Note that the inputs on the left are provided in decimal, but you will be expecting them as \texttt{4-bit binary} for this circuit.
+E.g. 15 will be provided as the input \texttt{1111}, 7 will be provided as the input \texttt{0111}, and so on and so forth.
+
+\begin{tcolorbox}\begin{center}
+  \begin{tabular}{c|l}
+       0 & XOR(A, B)\\
+       1 & AND(A, B)\\
+       2 & OR(A, B)\\
+       3 & ADD(A, B)\\
+       5 & MULT(A, B)\\
+       6 & BITSHIFTL(A)\\
+       7 & BITSHIFTR(A)\\
+       9 & NOT(A) \\
+       11 & SUB(A,R3)\\
+       15 & SLT(A, B) (is $A < B$?  0 if yes, 1 if false) \\
+  \end{tabular}
+  \end{center}\end{tcolorbox}
+
+The entire idea is to ensure that, with the help of some \texttt{AND} gates, we only allow input to reach the logical circuit that we are selecting for.
+As such, the only thing that will be sent down the output buses at the end of this will be the outputs from the selected operation.
+
+As you've seen many times in this class, learning about a logical circuit, then seeing its truth tables and diagrams, is usually different from the implementation in Minecraft.
+This is usually because the features that Minecraft affords us can help us in unique ways to make design more convenient, and this case is no different.
+
+Here's a general look at what your finished ALU circuit should look like.
+Notice how we facilitate the 4 opcode control wires as input, as well as how we have redirected all the ALU outputs to the output bus.
+
+\textbf{NOTE:} Multiplier output only needs to output o0, o1, o2. You don't need to output o3, o4, o5. 
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,383); %set diagram left start at 0, and has height of 383
+
+%Flowchart: Process [id:dp361889510967608] 
+\draw   (232.17,101.42) -- (514.83,101.42) -- (514.83,212.58) -- (232.17,212.58) -- cycle ;
+%Straight Lines [id:da20788033576573162] 
+\draw    (249.73,69.42) -- (249.73,99.42) ;
+\draw [shift={(249.73,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da5407997525841143] 
+\draw    (260.13,69.42) -- (260.13,99.42) ;
+\draw [shift={(260.13,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da5543254025067967] 
+\draw    (270.93,69.42) -- (270.93,99.42) ;
+\draw [shift={(270.93,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da4930195320737385] 
+\draw    (280.93,69.42) -- (280.93,99.42) ;
+\draw [shift={(280.93,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da5787854743775109] 
+\draw    (291.33,69.42) -- (291.33,99.42) ;
+\draw [shift={(291.33,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da43305475860143616] 
+\draw    (300.93,69.42) -- (300.93,99.42) ;
+\draw [shift={(300.93,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da503389639308414] 
+\draw    (429.1,69.42) -- (429.1,99.42) ;
+\draw [shift={(429.1,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da26279332523447596] 
+\draw    (440.13,69.42) -- (440.13,99.42) ;
+\draw [shift={(440.13,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da4128726853664295] 
+\draw    (450.53,69.42) -- (450.53,99.42) ;
+\draw [shift={(450.53,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6981139717770376] 
+\draw    (460.93,69.42) -- (460.93,99.42) ;
+\draw [shift={(460.93,101.42)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da7665394727956928] 
+\draw    (230.6,239.42) -- (536.6,239.42) ;
+\draw [shift={(538.6,239.42)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da9723395402179414] 
+\draw    (230.8,250.22) -- (536.8,250.22) ;
+\draw [shift={(538.8,250.22)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6608093823175721] 
+\draw    (231.6,261.82) -- (537.6,261.82) ;
+\draw [shift={(539.6,261.82)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da04403267623281315] 
+\draw [color={rgb, 255:red, 65; green, 117; blue, 5 }  ,draw opacity=1 ]   (322.13,213.42) -- (321.82,238.2) ;
+\draw [shift={(321.8,240.2)}, rotate = 270.71] [color={rgb, 255:red, 65; green, 117; blue, 5 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da22407039600924517] 
+\draw [color={rgb, 255:red, 65; green, 117; blue, 5 }  ,draw opacity=1 ]   (331.33,212.62) -- (331.02,247.8) ;
+\draw [shift={(331,249.8)}, rotate = 270.51] [color={rgb, 255:red, 65; green, 117; blue, 5 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da05260505311562991] 
+\draw [color={rgb, 255:red, 65; green, 117; blue, 5 }  ,draw opacity=1 ]   (340.93,212.62) -- (339.85,259.82) ;
+\draw [shift={(339.8,261.82)}, rotate = 271.32] [color={rgb, 255:red, 65; green, 117; blue, 5 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da30959458856383515] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (374.13,213.82) -- (373.82,238.6) ;
+\draw [shift={(373.8,240.6)}, rotate = 270.71] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6890808949997628] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (383.33,213.02) -- (383.02,248.2) ;
+\draw [shift={(383,250.2)}, rotate = 270.51] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da7160723671623558] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (392.93,213.02) -- (391.85,260.22) ;
+\draw [shift={(391.8,262.22)}, rotate = 271.32] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da29121697176647] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (412.93,213.82) -- (412.62,238.6) ;
+\draw [shift={(412.6,240.6)}, rotate = 270.71] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da568720784724797] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (422.13,213.02) -- (421.82,248.2) ;
+\draw [shift={(421.8,250.2)}, rotate = 270.51] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da60829034261405] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (431.73,213.02) -- (430.65,260.22) ;
+\draw [shift={(430.6,262.22)}, rotate = 271.32] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6394233053264408] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (451.73,213.42) -- (451.42,238.2) ;
+\draw [shift={(451.4,240.2)}, rotate = 270.71] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da4232604825237505] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (460.93,212.62) -- (460.62,247.8) ;
+\draw [shift={(460.6,249.8)}, rotate = 270.51] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da34274780013049766] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (470.53,212.62) -- (469.45,259.82) ;
+\draw [shift={(469.4,261.82)}, rotate = 271.32] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da33511925514491003] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (490.53,213.42) -- (490.22,238.2) ;
+\draw [shift={(490.2,240.2)}, rotate = 270.71] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6097670794906126] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (499.73,212.62) -- (499.42,247.8) ;
+\draw [shift={(499.4,249.8)}, rotate = 270.51] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da08422883513801505] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (509.33,212.62) -- (508.25,259.82) ;
+\draw [shift={(508.2,261.82)}, rotate = 271.32] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da8781339542494317] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (281.73,213.82) -- (281.42,238.6) ;
+\draw [shift={(281.4,240.6)}, rotate = 270.71] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da9790443437534954] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (290.93,213.02) -- (290.62,248.2) ;
+\draw [shift={(290.6,250.2)}, rotate = 270.51] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da7665627599053785] 
+\draw [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ]   (300.53,213.02) -- (299.45,260.22) ;
+\draw [shift={(299.4,262.22)}, rotate = 271.32] [color={rgb, 255:red, 155; green, 155; blue, 155 }  ,draw opacity=1 ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+
+% Text Node
+\draw (358.5,149) node [anchor=north west][inner sep=0.75pt]   [align=left] {ALU};
+% Text Node
+\draw (252,49) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small {\fontfamily{pcr}\selectfont Inputs}}};
+% Text Node
+\draw (422.4,49.4) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small {\fontfamily{pcr}\selectfont Opcode}}};
+% Text Node
+\draw (235.5,273.6) node [anchor=north west][inner sep=0.75pt]   [align=left] {\textcolor[rgb]{0.25,0.46,0.02}{Selected Operation}};
+% Text Node
+\draw (376.5,273.8) node [anchor=north west][inner sep=0.75pt]   [align=left] {\textcolor[rgb]{0.61,0.61,0.61}{Unselected Operations}};
+
+
+\end{tikzpicture}
+
+Doing the latter is perfectly fine now, as we can ensure that only one operation is expected to be selected at a time.
+
+\subsection{\fontfamily{lmdh}\selectfont{Video Resources}}
+
+We think that these pieces in particular are best described with video tutorials, which we have linked below.
+They are brought to you courtesy of Ashwath Krishnan, a former instructor for this class with a very cool gaming and streaming setup (hence the great video and mic quality).
+
+\begin{itemize}
+  \item \href{https://youtu.be/nx2mjjHE5Nw}{Part 1: Decoder in Minecraft}
+  \item \href{https://youtu.be/pa9ISjCkKh8}{Part 2: Output Bus Configuration}
+\end{itemize}
+
+We recommend watching both of these videos in order, as they'll provide a lot of excellent insight into building out these components in the most efficient way possible.
+As a side note, we suggest familiarizing yourself with decoders, as they will be a key part of the next lecture and project as we finally start writing our own 'code'.
+
+\section{\fontfamily{lmdh}\selectfont{Testing \& Submission}}
+
+You will test and submit this project in the same way that you have done for every other project in this class. 
+However, we are now getting to the point where you are attemping tests with a pretty large circuit, that will most probably have some settling time.
+
+It is at this time that you should \textbf{ensure that none of your repeaters are set past the first position}. 
+Our mod makes it so that the delay is pretty much nonexistent if the repeater is in first position, just to ensure that the settling time for your circuit is minimal.
+That is, our mod makes sure that redstone signals are not held up at repeaters for very long at all, and as such, they won't take long to propagate as long as you don't change the repeaters from their default setting.
+
+After having ensured this, go ahead and run your tests using the following:
+
+\begin{tcolorbox}
+  \texttt{/test start}
+\end{tcolorbox}
+
+Despite this, your signals may still take a little bit to propogate through the circuit. 
+If you are finding this to be an issue, simply perform your tests with a delay by using the seconds parameter in the \texttt{start} command.
+I prefer using a delay of 2 seconds, as follows, to properly ensure that the signals are traveling through my circuit correctly.
+
+\begin{tcolorbox}
+  \texttt{/test start 2}
+\end{tcolorbox}
+
+\textit{Fun fact: This is not just a problem in Minecraft! In real life, electricity also takes a finite amount of time to travel through circuits- it doesn't just happen instantaneously. Based on the complexity of the circuit, this can be a significant amount of time, which led to the creation of the term \textbf{settling time} for CPUs. This is the amount of time that it takes for a clock cycle to complete (for all the signals to propagate correctly). More on this when we do our next project!}
+
+After this, you can submit the project as you usually would- remember to attach the:
+
+\begin{itemize}
+  \item \texttt{.zip} file containing your world
+  \item screenshot of the tests passing
+\end{itemize}
+
+Don't forget to pat yourself on the back for building a way cool ALU from start to finish!
+Now you can go teach CMSC411 like it's nobody's business.
+
+\end{document}

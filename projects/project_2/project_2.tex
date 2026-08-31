@@ -1,0 +1,457 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[dvipsnames]{xcolor}
+\usepackage[labels]{enumitem}
+\usepackage{tikz}
+\usepackage{alltt}
+\usepackage{tcolorbox}
+\usepackage{indentfirst}
+\usepackage[top = 1in, left = 1 in, right = 1 in, bottom = 1in]{geometry}
+\usepackage{sectsty}
+\usepackage{enumitem}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{circuitikz}
+\usepackage{float}
+\usepackage{circuitikz}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\setlist{  
+  listparindent=\parindent,
+  parsep=1em
+}
+\hypersetup{
+    colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+\sectionfont{\fontsize{17}{15}\selectfont}
+\setlength{\parskip}{1em}
+
+\setlength{\parindent}{1cm}
+
+\newcommand{\createtitle}[4]{
+    {\Huge #1} \hfill  #2 \\
+    
+    \begin{tabular}{rl}
+        \textbf{Assigned: } & #3 \\
+        \textbf{Due: } & #4
+    \end{tabular}
+    \vspace{.75 in}}
+
+\newcommand{\mysubsection}[1]{
+    {\fontsize{13}{15}\selectfont\bf \item #1}}
+    
+\newenvironment{subenv}[2]
+{\section{#1}\vspace{.5em}#2\\\begin{enumerate}}
+{\end{enumerate}}
+
+\newcommand{\varin}[1]{\textcolor{red}{\texttt{#1}}}
+\newcommand{\varout}[1]{\textcolor{blue}{\texttt{#1}}}
+
+\newcommand{\myinput}{\varin{input }}
+\newcommand{\myoutput}{\varout{output }}
+
+\newcommand{\image}[2]{
+\begin{figure}[H]\begin{center}
+    \includegraphics[width=#2\linewidth]{#1}
+\end{center}\end{figure}}
+
+\newcommand{\tbd}{\textbf{TBD}}
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[LE,RO]{Akilesh Praveen}
+\fancyhead[RE,LO]{CMSC389E}
+
+\begin{document}
+
+\large
+
+{\fontfamily{lmdh}\selectfont{\Huge CMSC389E Project 2: \par Arithmetic Logic Unit- \par Adders \& Multipliers}}
+
+Assigned \textbf{Friday February 11}
+
+Due \textbf{Thursday February 24}
+
+\section{\fontfamily{lmdh}\selectfont{The Joy of Mathematics}}
+
+Now that we're done building the logical portion of the ALU, it's only right that we attack the arithmetic portion. In this project, we're going to use our newfound knowledge of Adders to design some much needed mathematical architecture for our ALU. Specifically, we're going to build in the ability to \textbf{add} and \textbf{multiply} 3-bit numbers.
+
+This section will focus a lot on how you go about implementing this architecture in terms of where you place the adders and how you debug them. As such- a word of advice before you begin. The best way to do this project is to build one single adders, properly unit test it with a bunch of test cases, and then when you know that it works, copy paste it over and over to achieve the 3-bit adding functionality that we're looking for. (And afterwards, the multiplier).
+
+This project comes in two parts- the first is the implementation of the 3-bit adder, and the second is the implementation of the 3-bit multiplier.
+We have split testing into two distinct phases for this reason- first, you will build your 3-bit adder and test it, then you will build your 3-bit multplier.
+
+\section{\fontfamily{lmdh}\selectfont{Conceptual Overview: Addition and Multiplication}}
+
+Adddition and multiplication are processes that we usually can perform as second-nature now, but part of learning how to be a good computer architecture designer is figuring out how one can take these mundane tasks that we as humans perform very easily, and distilling them down to systematic, methodical tasks that any set of logic gates can perform.
+
+These answers come to us in the form of Adders, one of the most basic logical circuits for Arithmetic. You will be building quite a few of them for this project. (Or, preferably, building one of them and then copying them a bunch using your copying method of choice)
+
+\section{\fontfamily{lmdh}\selectfont{Part A: Building the Adders}}
+
+This project builds upon your Project 1 Implementation. In order to correctly load it up, please copy your Project 1 world (you can do this manually, in the \texttt{saves} directory of Minecraft) into a Project 2 world. Ensure that you name it Project2. Then, open the world and remove all the project 1 input/output blocks so that you may load the new project.
+
+We will start by loading the appropriate blocks for the first part of this project. Specifically, we will be building out the 3-bit adder. To do this, run the following command. 
+
+\begin{tcolorbox}
+  \texttt{/test load 2}
+\end{tcolorbox}
+
+Firstly, you will see that you have the same input blocks at your disposal.
+You will be building a three bit adder using both input buses, and deliver that output to the outputs labelled \varout{oAdder0}, \varout{oAdder1}, \varout{oAdder2}, \varout{oAdder3}.
+
+\section{\fontfamily{lmdh}\selectfont{Part A: Schematics}}
+
+For reference, the adder you will be building and testing looks like this. Remember, in order to achieve a 3-bit adder, you'll just be chaining full adders together and connecting the carry-out bits of previous adders to the carry-in bits of the next adders.
+
+Note that you will have one more carry-out bit to deal with after the fact. This means that you will take the sum of the first pair of adders and deliver it to \varout{oAdder0}, the sum of the second pair of adders and deliver it to \varout{oAdder1}, the sum of the third pair of adders and deliver it to \varout{oAdder2}, and finally take the carry-out from the third pair of adders and deliver that to \varout{oAdder3}.
+Make sure, of course, that you are taking the carry-out bits of each pair of adders and delivering them to the carry-in of the appropriate other adder when necessary.
+
+You are expected to extend your output buses from your implementation of Project 1 in order to create this architecture. Refer to the diagram below.
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,300); %set diagram left start at 0, and has height of 300
+
+%Straight Lines [id:da7381635994363456] 
+\draw    (132,58) -- (132,220.17) ;
+%Straight Lines [id:da7848514350155817] 
+\draw    (150,58) -- (150,220.17) ;
+%Straight Lines [id:da8302964863935134] 
+\draw    (170,58) -- (170,220.17) ;
+%Straight Lines [id:da34955037883800877] 
+\draw    (223.33,58.67) -- (223.33,220.83) ;
+%Straight Lines [id:da6786658733704694] 
+\draw    (241.33,58.67) -- (241.33,220.83) ;
+%Straight Lines [id:da12919865074668824] 
+\draw    (261.33,58.67) -- (261.33,220.83) ;
+%Straight Lines [id:da7305483279108875] 
+\draw    (132,71) -- (374.33,71) ;
+\draw [shift={(132,71)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da5465669365377519] 
+\draw    (224,87.67) -- (374.33,87.67) ;
+\draw [shift={(224,87.67)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8071636079717495] 
+\draw    (149.83,126) -- (374.83,126) ;
+\draw [shift={(149.83,126)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da4793307324782463] 
+\draw    (241.5,142.56) -- (374.83,142.56) ;
+\draw [shift={(241.5,142.56)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da7597363793894083] 
+\draw    (170.17,183.5) -- (373.83,183.5) ;
+\draw [shift={(170.17,183.5)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da12533768391816502] 
+\draw    (261.33,199.94) -- (373.83,199.94) ;
+\draw [shift={(261.33,199.94)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: Rectangle [id:dp4805727559899592] 
+\draw   (374.33,62) -- (445,62) -- (445,96.25) -- (374.33,96.25) -- cycle ;
+%Shape: Rectangle [id:dp3337169468789084] 
+\draw   (374.33,117.5) -- (445,117.5) -- (445,151.75) -- (374.33,151.75) -- cycle ;
+%Shape: Rectangle [id:dp9371224283048248] 
+\draw   (374.33,173.5) -- (445,173.5) -- (445,207.75) -- (374.33,207.75) -- cycle ;
+%Straight Lines [id:da957771323513043] 
+\draw    (409.67,30.75) -- (409.67,60.25) ;
+\draw [shift={(409.67,62.25)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da08363994560912236] 
+\draw    (409.67,96.25) -- (409.67,115.25) ;
+\draw [shift={(409.67,117.25)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da6635965831798994] 
+\draw    (409.67,152.58) -- (409.67,171.58) ;
+\draw [shift={(409.67,173.58)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da008651621753931305] 
+\draw    (409.67,207.42) -- (409.67,236.92) ;
+\draw [shift={(409.67,238.92)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da2260056775229814] 
+\draw    (446,137.22) -- (477,137.22) ;
+\draw [shift={(479,137.22)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da5168216629641919] 
+\draw    (446.33,191.22) -- (477.33,191.22) ;
+\draw [shift={(479.33,191.22)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+%Straight Lines [id:da21024475266476683] 
+\draw    (446,79) -- (477,79) ;
+\draw [shift={(479,79)}, rotate = 180] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]    (10.93,-3.29) .. controls (6.95,-1.4) and (3.31,-0.3) .. (0,0) .. controls (3.31,0.3) and (6.95,1.4) .. (10.93,3.29)   ;
+
+% Text Node
+\draw (119,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA0}}};
+% Text Node
+\draw (140.33,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA1}}};
+% Text Node
+\draw (161,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA2}}};
+% Text Node
+\draw (211.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB0}}};
+% Text Node
+\draw (233,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB1}}};
+% Text Node
+\draw (253.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB2}}};
+% Text Node
+\draw (481.5,68.67) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAdder0}}};
+% Text Node
+\draw (483.17,126.22) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAdder1}}};
+% Text Node
+\draw (482.83,180.39) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAdder2}}};
+% Text Node
+\draw (380.17,70.67) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (380.17,127.33) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (380.17,183) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (387.17,242.92) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize oAdder3}}};
+
+\end{tikzpicture}
+
+\section{\fontfamily{lmdh}\selectfont{Submission Of Part A}}
+
+You will be submitting this solution \textbf{with} the Part B solution for this project. You will only be submitting one map, however, so for this part, simply take a screenshot of your tests passing the adder tests for part A.
+
+Running the following command should invoke the tests.
+
+\begin{tcolorbox}
+  \texttt{/test start}
+\end{tcolorbox}
+
+Once you pass all the tests, take a screencap of them passing, and save it. You will include this screenshot in the final submission. When you are ready, move onto Part B of the project below.
+
+\section{\fontfamily{lmdh}\selectfont{Part B: Building the Multipliers}}
+
+Now that we've built the adders, this next bit should be easy.
+Recall that in class we spoke about multiplication in our particular digital logic setup just being repeated addition. In that same sense, we're going to simply take the addition circuit that we just produced, make a copy of it, and extend it to be a multiplication circuit.
+
+Since we haven't been over this stuff in CMSC250 explicitly, I suggest you understand the relation between long multiplication and the actual multiplier circuit before going ahead with your implementation. You'll find this in the form of a step by step instruction set in the most recent slide deck for the class.
+It will help with implementation, and will help with testing.
+
+For part B of this project, you'll make a new world by copying all of your content from Part A (a.k.a your Project2 world) over into a new world called Project3. (Same process as you went through to create the Project2 world as described earlier)
+
+As you did in Part A, ensure that you are able to load the testing setup for this portion of the project. You may do this using the following command:
+
+\begin{tcolorbox}
+  \texttt{/test load 3}
+\end{tcolorbox}
+
+You will see that the in-nodes remain unchanged from the previous part of the project.
+This is to be expected- instead of \textbf{adding} two 3-bit numbers, we will instead be \textbf{multiplying} them.
+
+As we mentioned previously, this is quite the trivial task after you have taken care of the creation of the Adders. You will merely take these inputs and feed them into a setup consisting of two 3-bit adders in order to produce a meaningful solution. Keep in mind that our multiplication solution will be 6 bits of output here, as we will now have to be dealing with larger output numbers than what mere addition can produce.
+
+\section{\fontfamily{lmdh}\selectfont{Part B: Schematics}}
+
+As you may recall from class, \textbf{(combinatorial) multipliers are just large groups of adders}. As such, we have defined Part B of this project in terms of the 3-bit adder you have just built! Just a bit more copy pasting and connecting, and you're good to go!
+
+
+
+\tikzset{every picture/.style={line width=0.75pt}} %set default line width to 0.75pt        
+
+\begin{tikzpicture}[x=0.75pt,y=0.75pt,yscale=-1,xscale=1]
+%uncomment if require: \path (0,468); %set diagram left start at 0, and has height of 468
+
+%Straight Lines [id:da7381635994363456] 
+\draw    (132,58) -- (132,350.21) ;
+%Straight Lines [id:da7848514350155817] 
+\draw    (150,58) -- (150.83,348.48) ;
+%Straight Lines [id:da8302964863935134] 
+\draw    (170,58) -- (169.5,342.48) ;
+%Straight Lines [id:da34955037883800877] 
+\draw    (223.33,58.67) -- (223.33,348.21) ;
+%Straight Lines [id:da6786658733704694] 
+\draw    (241.33,58.67) -- (241.4,350.21) ;
+%Straight Lines [id:da12919865074668824] 
+\draw    (261.33,58.67) -- (261.33,349.41) ;
+%Straight Lines [id:da7305483279108875] 
+\draw    (132.67,67.67) -- (534.33,67.67) ;
+\draw [shift={(132.67,67.67)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da5465669365377519] 
+\draw    (223.33,80.33) -- (522.33,80.33) ;
+\draw [shift={(223.33,80.33)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8071636079717495] 
+\draw    (150.83,93.33) -- (477,92.33) ;
+\draw [shift={(150.83,93.33)}, rotate = 359.82] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: Rectangle [id:dp4805727559899592] 
+\draw   (289,196.48) -- (505,196.48) -- (505,251.01) -- (289,251.01) -- cycle ;
+%Shape: And Gate [id:dp18563023557276426] 
+\draw   (538.04,85.48) -- (538.05,93.23) .. controls (538.05,97.51) and (533.83,100.98) .. (528.63,100.99) .. controls (523.43,100.99) and (519.21,97.52) .. (519.2,93.25) -- (519.2,85.5) -- (538.04,85.48) -- cycle (534.89,80.32) -- (534.9,85.49) (522.33,80.33) -- (522.34,85.5) (528.63,100.99) -- (528.64,106.15) ;
+%Straight Lines [id:da4508273007959748] 
+\draw    (534.33,67.67) -- (534.89,80.32) ;
+%Shape: And Gate [id:dp8523830559488794] 
+\draw   (492.71,97.48) -- (492.71,105.23) .. controls (492.72,109.51) and (488.5,112.98) .. (483.3,112.99) .. controls (478.1,112.99) and (473.87,109.52) .. (473.87,105.25) -- (473.86,97.5) -- (492.71,97.48) -- cycle (489.56,92.32) -- (489.56,97.49) (477,92.33) -- (477,97.5) (483.3,112.99) -- (483.3,118.15) ;
+%Straight Lines [id:da055992699411458347] 
+\draw    (489.56,92.32) -- (489.67,81) ;
+\draw [shift={(489.67,81)}, rotate = 270.54] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: And Gate [id:dp6716497295366322] 
+\draw   (440.84,108.28) -- (440.85,116.03) .. controls (440.85,120.31) and (436.63,123.78) .. (431.43,123.79) .. controls (426.23,123.79) and (422.01,120.32) .. (422,116.05) -- (422,108.3) -- (440.84,108.28) -- cycle (437.69,103.12) -- (437.7,108.29) (425.13,103.13) -- (425.14,108.3) (431.43,123.79) -- (431.44,128.95) ;
+%Straight Lines [id:da32387337345521083] 
+\draw    (437.96,103.8) -- (437.96,80.2) ;
+\draw [shift={(437.96,80.2)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da47399865183854717] 
+\draw    (131.03,135.67) -- (399.5,135.67) ;
+\draw [shift={(131.03,135.67)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da6527880298608997] 
+\draw    (241.4,148.61) -- (387.5,148.33) ;
+\draw [shift={(241.4,148.61)}, rotate = 359.89] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da31085453096993076] 
+\draw    (150.83,160.13) -- (342.17,160.33) ;
+\draw [shift={(150.83,160.13)}, rotate = 0.06] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: And Gate [id:dp31393703088925995] 
+\draw   (403.2,153.48) -- (403.21,161.23) .. controls (403.21,165.51) and (399,168.98) .. (393.8,168.99) .. controls (388.6,168.99) and (384.37,165.52) .. (384.37,161.25) -- (384.36,153.5) -- (403.2,153.48) -- cycle (400.06,148.32) -- (400.06,153.49) (387.5,148.33) -- (387.5,153.5) (393.8,168.99) -- (393.8,174.15) ;
+%Straight Lines [id:da20114002967881928] 
+\draw    (399.5,135.67) -- (400.06,148.32) ;
+%Shape: And Gate [id:dp13255475261752248] 
+\draw   (357.87,165.48) -- (357.88,173.23) .. controls (357.88,177.51) and (353.66,180.98) .. (348.46,180.99) .. controls (343.27,180.99) and (339.04,177.52) .. (339.04,173.25) -- (339.03,165.5) -- (357.87,165.48) -- cycle (354.73,160.32) -- (354.73,165.49) (342.17,160.33) -- (342.17,165.5) (348.46,180.99) -- (348.47,186.15) ;
+%Straight Lines [id:da8518641155400507] 
+\draw    (354.73,160.32) -- (354.83,149) ;
+\draw [shift={(354.83,149)}, rotate = 270.54] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: And Gate [id:dp6615443372542124] 
+\draw   (306,176.28) -- (306.01,184.03) .. controls (306.01,188.31) and (301.8,191.78) .. (296.6,191.79) .. controls (291.4,191.79) and (287.17,188.32) .. (287.17,184.05) -- (287.16,176.3) -- (306,176.28) -- cycle (302.86,171.12) -- (302.86,176.29) (290.3,171.13) -- (290.3,176.3) (296.6,191.79) -- (296.6,196.95) ;
+%Straight Lines [id:da5762890465815098] 
+\draw    (303.13,171.8) -- (303.13,148.2) ;
+\draw [shift={(303.13,148.2)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da8506533912956215] 
+\draw    (169,171.15) -- (290.3,171.13) ;
+\draw [shift={(169,171.15)}, rotate = 359.99] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da2386939404406433] 
+\draw    (170.33,103.81) -- (425.13,103.13) ;
+\draw [shift={(170.33,103.81)}, rotate = 359.85] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da2623029302607367] 
+\draw    (483.3,116.98) -- (483.3,128.31) ;
+%Straight Lines [id:da18787363536450763] 
+\draw    (528.64,106.15) -- (528.64,427.81) ;
+%Straight Lines [id:da09029831336490324] 
+\draw    (431.44,128.95) -- (453,196.48) ;
+%Straight Lines [id:da7001472376294895] 
+\draw    (483.3,128.31) -- (482.33,195.81) ;
+%Straight Lines [id:da1696164659708237] 
+\draw    (421.3,166.31) -- (422.33,197.15) ;
+%Straight Lines [id:da7660841330360112] 
+\draw    (348.47,186.15) -- (349,195.81) ;
+%Straight Lines [id:da497944333882241] 
+\draw    (393.8,174.15) -- (394.33,195.81) ;
+%Straight Lines [id:da4641711543634416] 
+\draw    (131.03,263.27) -- (399.5,263.27) ;
+\draw [shift={(131.03,263.27)}, rotate = 0] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da3220426521890648] 
+\draw    (260.6,276.21) -- (387.5,275.93) ;
+\draw [shift={(260.6,276.21)}, rotate = 359.87] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da9991957486412416] 
+\draw    (150.83,287.73) -- (342.17,287.93) ;
+\draw [shift={(150.83,287.73)}, rotate = 0.06] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: And Gate [id:dp7233083199218819] 
+\draw   (403.2,281.08) -- (403.21,288.83) .. controls (403.21,293.11) and (399,296.58) .. (393.8,296.59) .. controls (388.6,296.59) and (384.37,293.12) .. (384.37,288.85) -- (384.36,281.1) -- (403.2,281.08) -- cycle (400.06,275.92) -- (400.06,281.09) (387.5,275.93) -- (387.5,281.1) (393.8,296.59) -- (393.8,301.75) ;
+%Straight Lines [id:da23954891019961977] 
+\draw    (399.5,263.27) -- (400.06,275.92) ;
+%Shape: And Gate [id:dp4998418481919429] 
+\draw   (357.87,293.08) -- (357.88,300.83) .. controls (357.88,305.11) and (353.66,308.58) .. (348.46,308.59) .. controls (343.27,308.59) and (339.04,305.12) .. (339.04,300.85) -- (339.03,293.1) -- (357.87,293.08) -- cycle (354.73,287.92) -- (354.73,293.09) (342.17,287.93) -- (342.17,293.1) (348.46,308.59) -- (348.47,313.75) ;
+%Straight Lines [id:da953728637565614] 
+\draw    (354.73,287.92) -- (354.83,276.6) ;
+\draw [shift={(354.83,276.6)}, rotate = 270.54] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Shape: And Gate [id:dp21545848120103284] 
+\draw   (306,303.88) -- (306.01,311.63) .. controls (306.01,315.91) and (301.8,319.38) .. (296.6,319.39) .. controls (291.4,319.39) and (287.17,315.92) .. (287.17,311.65) -- (287.16,303.9) -- (306,303.88) -- cycle (302.86,298.72) -- (302.86,303.89) (290.3,298.73) -- (290.3,303.9) (296.6,319.39) -- (296.6,324.55) ;
+%Straight Lines [id:da5839366637838256] 
+\draw    (303.13,299.4) -- (303.13,275.8) ;
+\draw [shift={(303.13,275.8)}, rotate = 270] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da10928755301440651] 
+\draw    (169,298.75) -- (290.3,298.73) ;
+\draw [shift={(169,298.75)}, rotate = 359.99] [color={rgb, 255:red, 0; green, 0; blue, 0 }  ][fill={rgb, 255:red, 0; green, 0; blue, 0 }  ][line width=0.75]      (0, 0) circle [x radius= 3.35, y radius= 3.35]   ;
+%Straight Lines [id:da4501261210508146] 
+\draw    (348.47,313.75) -- (349,323.41) ;
+%Straight Lines [id:da39126441962259306] 
+\draw    (393.8,301.75) -- (390.2,323.41) ;
+%Shape: Rectangle [id:dp5292842101661415] 
+\draw   (287.4,324.08) -- (503.4,324.08) -- (503.4,378.61) -- (287.4,378.61) -- cycle ;
+%Straight Lines [id:da20464911463084157] 
+\draw    (418.5,250.71) -- (418.6,323.81) ;
+%Straight Lines [id:da19043150769639106] 
+\draw    (443.7,250.31) -- (448.2,323.41) ;
+%Straight Lines [id:da7838103009839008] 
+\draw    (466.9,250.31) -- (478.6,323.41) ;
+%Straight Lines [id:da4768585231715826] 
+\draw    (489.3,252.31) -- (514.2,284.61) ;
+%Straight Lines [id:da7860741191846164] 
+\draw    (514.2,284.61) -- (514.2,442.21) ;
+%Straight Lines [id:da6268407527711205] 
+\draw    (528.64,427.81) -- (551.8,441.01) ;
+%Straight Lines [id:da3623829275810856] 
+\draw    (489.3,379.41) -- (489.4,441.41) ;
+%Straight Lines [id:da5368032845794772] 
+\draw    (461.7,379.59) -- (461.4,442.61) ;
+%Straight Lines [id:da819410271655396] 
+\draw    (441.14,378.96) -- (440.84,441.99) ;
+%Straight Lines [id:da5648421844232155] 
+\draw    (418.8,378.16) -- (418.5,441.19) ;
+
+% Text Node
+\draw (119,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA0}}};
+% Text Node
+\draw (140.33,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA1}}};
+% Text Node
+\draw (161,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iA2}}};
+% Text Node
+\draw (211.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB0}}};
+% Text Node
+\draw (233,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB1}}};
+% Text Node
+\draw (253.67,37) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 208; green, 2; blue, 27 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize iB2}}};
+% Text Node
+\draw (374.83,214) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (294.1,197.58) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont \textcolor[rgb]{0.96,0.65,0.14}{{\small a2 \ \ \ a1 \ \ a0 \ \ \ b2 \ b1 \ b0}}}};
+% Text Node
+\draw (415.83,148.92) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 245; green, 166; blue, 35 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont 0}};
+% Text Node
+\draw (299.3,231.18) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont \textcolor[rgb]{0.96,0.65,0.14}{{\small  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ co s2 s1 s0}}}};
+% Text Node
+\draw (373.23,341.6) node [anchor=north west][inner sep=0.75pt]   [align=left] {{\small full adder}};
+% Text Node
+\draw (292.9,325.58) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont \textcolor[rgb]{0.96,0.65,0.14}{{\small a2 \ \ \ \ a1 \ \ a0 \ \ b2 \ b1 \ b0}}}};
+% Text Node
+\draw (297.7,358.38) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont \textcolor[rgb]{0.96,0.65,0.14}{{\small  \ \ \ \ \ \ \ \ \ \ \ \ \ \ \ co s2 s1 s0}}}};
+% Text Node
+\draw (414.44,444.26) node [anchor=north west][inner sep=0.75pt]  [color={rgb, 255:red, 74; green, 144; blue, 226 }  ,opacity=1 ] [align=left] {{\fontfamily{pcr}\selectfont {\footnotesize o5 o4 o3 \ \ o2 \ o1 \ \ \ o0}}};
+
+
+\end{tikzpicture}
+
+In this diagram, the blocks labelled 'full adder' are simply just copy-pastes (use structure blocks, clone, or worldedit!) of the adder you created in Part A. Just string those together with a few \texttt{AND} gates (which you can also copy over from your logical ALU section) and you should be good to go.
+
+You'll note that input \texttt{b2} of one of the full adders is an orange zero. That just means that no signal should be going in there, i.e. that input should always be zero.
+
+\section{\fontfamily{lmdh}\selectfont{Testing Part B}}
+
+It's worth noting that at this point, the speed of the actual redstone signals traveling through the circuits catches up with us. In other words, our CPU is showing its first signs of settling time! As mentioned in the conceptual overview section, it's important that we take this settling time into account when we attempt to avoid race conditions. 
+
+For this reason, we'll want to run the test command here with a bit of a delay, between 1 and 3 seconds, if we want to ensure correctness in our testing and output.
+
+You can do this by running the test command with the following syntax, where number of seconds represents the delay that you want to enforce between each test.
+
+\begin{tcolorbox}
+  \texttt{/test start <number of seconds>}
+\end{tcolorbox}
+
+\section{\fontfamily{lmdh}\selectfont{Submission Of Part B}}
+
+You will be submitting this solution \textbf{with} the Part A solution for this project. You will only be submitting one map, however, so for this part, simply take a screenshot of your tests passing the multiplier tests for part B.
+
+Running the following command should invoke the tests.
+
+\begin{tcolorbox}
+  \texttt{/test start}
+\end{tcolorbox}
+
+Remember to add a delay this time, especially if you see some tests failing unnecessarily. We will most likely be running your tests with a delay of 2 seconds, so include a small comment on your submission if your implementation needs more settling time than that.
+
+After all is done, submit the following three things to the ELMS assignment.
+
+\begin{itemize}
+  \item Screenshot of Project 2 Part A (Project2) tests passing
+  \item Screenshot of Project 2 Part B (Project3) tests passing
+  \item Your final Project3 world, containing all of your work from P1 up till P2 now. (Logic gates, Adder, Multiplier)
+\end{itemize}
+
+Congratulations, you're done! As always, ping us on Piazza with any questions, or send us an email.
+\end{document}

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <script src="https://kit.fontawesome.com/ff03879f1f.js" crossorigin="anonymous"></script>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Digital Logic Design &amp; Minecraft</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+
+</head>
+
+<body>
+
+  <div class="container container-large">
+    <h1>Machine Language for Our CPU</h1>
+    <p>
+        Rather than having to manually fly all around your world setting inputs everywhere for 
+        input1, input2, the register to write to, and the opcode, 
+        what if we started creating machine language or instructions for our CPU to set everything at once? 
+        We can then expand upon this to create as many unique instructions as we want! And when we create a program, 
+        it can iterate through different instructions.
+    </p>
+    <p>
+        We can create <strong>16-bit instructions</strong>! Note, our assembler could instead process a smaller instruction bit size, 
+        but we'll keep it at 16 for simplicity.
+    </p>
+    <ul>
+        <li>The first four bits as our <strong>opcode</strong></li>
+        <li>The second set of four bits as our <strong>first input register</strong></li>
+        <li>The third set of four bits as our <strong>second input register</strong></li>
+        <li>The fourth set of four bits as our <strong>register to write to</strong></li>
+    </ul>
+    <img src="img/u7-1.png" alt="simulated_dual_read" class="inlinepic-big">
+    <p>
+        Essentially, after construction, you will be able to query the instruction memory for an address, 
+        and the rest of your CPU will set all inputs accordingly to produce some output. 
+        You will need to pay careful attention to wiring the correct inputs to the control ROM.
+    </p>
+    <p>
+        For example:
+    </p>
+    <pre>
+add 3 1 2
+1001 0011 0001 0010
+(r3 = r1 + r2)
+    </pre>
+
+      <div class="pagearrows">
+        <a href="u6c3.html" class="text-primary"><div class="back"> <i class="fas fa-chevron-left"></i> back </div></a>
+        <a href="u7c1.html" class="text-primary"><div class="forward">forward  <i class="fas fa-chevron-right"></i></div></a>
+      </div>
+
+    </div>
+
+</body>
